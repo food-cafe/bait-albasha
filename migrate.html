@@ -1,0 +1,362 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ترحيل البيانات | بيت الباشا</title>
+<link href="https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&family=Tajawal:wght@400;700;900&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#0A0A0A;--bg2:#141414;--gold:#D4AF37;--text:#FDFBF7;--dim:#888}
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:'Tajawal',sans-serif;background:radial-gradient(circle at top, #1A1A1A 0%, #0A0A0A 100%);min-height:100vh;display:flex;align-items:center;justify-content:center;padding:20px;color:var(--text)}
+.card{background:var(--bg2);border-radius:24px;padding:40px 30px;max-width:550px;width:100%;box-shadow:0 30px 80px rgba(0,0,0,0.6),0 0 0 1px rgba(212,175,55,0.2);text-align:center;border:1px solid rgba(212,175,55,0.1)}
+h1{font-family:'Amiri',serif;font-size:28px;color:var(--gold);margin-bottom:8px}
+.sub{font-size:14px;color:var(--dim);margin-bottom:24px}
+.warn-box{background:rgba(225,6,0,0.1);border:1.5px solid rgba(225,6,0,0.3);border-radius:12px;padding:14px;margin-bottom:24px;font-size:13px;font-weight:700;color:#FF6B6B}
+.btn{width:100%;padding:16px;border-radius:50px;font-family:inherit;font-size:16px;font-weight:900;border:none;cursor:pointer;background:linear-gradient(135deg,var(--gold),#F3E5AB);color:#0A0A0A;transition:all 0.3s;box-shadow:0 10px 30px rgba(212,175,55,0.3)}
+.btn:disabled{opacity:0.5;pointer-events:none}
+.progress{height:6px;border-radius:3px;background:var(--bg);overflow:hidden;margin-top:16px;display:none}
+.progress.show{display:block}
+.progress-bar{height:100%;width:0%;background:var(--gold);transition:width 0.3s}
+.status{margin-top:16px;font-size:14px;font-weight:700;color:var(--dim)}
+.status.success{color:#25D366}
+.status.error{color:#FF6B6B}
+</style>
+</head>
+<body>
+<div class="card">
+  <h1>ترحيل بيانات بيت الباشا</h1>
+  <p class="sub">سكربت لمرة واحدة — 150+ صنف</p>
+  <div class="warn-box">⚠️ هذا السكربت سيقوم بمسح أي بيانات سابقة واستبدالها بالأصناف الجديدة.</div>
+  <button class="btn" id="btn">🚀 ابدأ الترحيل الآن</button>
+  <div class="progress" id="progress"><div class="progress-bar" id="progressBar"></div></div>
+  <div class="status" id="status"></div>
+</div>
+
+<script type="module">
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+  import { getFirestore, doc, setDoc } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+
+  const firebaseConfig = {
+    apiKey: "AIzaSyAE0-gK_eWE5cRxkX-j22zoOYfMSZfNLKk",
+    authDomain: "biet-albasha.firebaseapp.com",
+    projectId: "biet-albasha",
+    storageBucket: "biet-albasha.firebasestorage.app",
+    messagingSenderId: "349931331130",
+    appId: "1:349931331130:web:1562743baa3f76a9d51f03"
+  };
+
+  const app = initializeApp(firebaseConfig);
+  const db = getFirestore(app);
+  const $ = id => document.getElementById(id);
+  const genId = () => Date.now().toString(36) + Math.random().toString(36).slice(2, 8);
+
+  // صور مخصصة لكل نوع طبق
+  const IMG = {
+    tea: "https://images.unsplash.com/photo-1544787219-7f47ccb76574?w=600&q=80",
+    coffee: "https://images.unsplash.com/photo-1509042239860-f550ce710b93?w=600&q=80",
+    cappuccino: "https://images.unsplash.com/photo-1572442388796-11668a67e53d?w=600&q=80",
+    hotChoc: "https://images.unsplash.com/photo-1542990253-a781e04c0082?w=600&q=80",
+    shisha: "https://images.unsplash.com/photo-1598425237654-4cb82931e676?w=600&q=80",
+    grill: "https://images.unsplash.com/photo-1555939594-58d7cb561ad1?w=600&q=80",
+    kebab: "https://images.unsplash.com/photo-1529193591184-b1d58069ecdd?w=600&q=80",
+    shish: "https://images.unsplash.com/photo-1603360946369-dc9bb6258143?w=600&q=80",
+    mansaf: "https://images.unsplash.com/photo-1585937421612-70a008356fbe?w=600&q=80",
+    grilledChicken: "https://images.unsplash.com/photo-1598103442097-8b74394b95c6?w=600&q=80",
+    shawarma: "https://images.unsplash.com/photo-1529006557810-274b9b2fc783?w=600&q=80",
+    shawarmaWrap: "https://images.unsplash.com/photo-1561651823-34feb02250e4?w=600&q=80",
+    burger: "https://images.unsplash.com/photo-1568901346375-23c9450c58cd?w=600&q=80",
+    burgerChicken: "https://images.unsplash.com/photo-1606755962773-d324e0a13086?w=600&q=80",
+    sandwich: "https://images.unsplash.com/photo-1528735602780-2552fd46c7af?w=600&q=80",
+    meal: "https://images.unsplash.com/photo-1626645738196-c2a7c87a8f58?w=600&q=80",
+    crispyMeal: "https://images.unsplash.com/photo-1562967914-608f82629710?w=600&q=80",
+    pizza: "https://images.unsplash.com/photo-1513104890138-7c749659a591?w=600&q=80",
+    manakish: "https://images.unsplash.com/photo-1574169208507-84376144848b?w=600&q=80",
+    zaatar: "https://images.unsplash.com/photo-1590947132387-155cc02f3212?w=600&q=80",
+    hummus: "https://images.unsplash.com/photo-1637949385162-e416fb15b2ce?w=600&q=80",
+    salad: "https://images.unsplash.com/photo-1540189549336-e6e99c3679fe?w=600&q=80",
+    tabbouleh: "https://images.unsplash.com/photo-1540189549336-e6e99c3679fe?w=600&q=80",
+    caesar: "https://images.unsplash.com/photo-1550304943-4f24f54ddde9?w=600&q=80",
+    fries: "https://images.unsplash.com/photo-1573080496219-bb080dd4f877?w=600&q=80",
+    kibbeh: "https://images.unsplash.com/photo-1601050690117-94f5f6fa8bd7?w=600&q=80",
+    cordonBleu: "https://images.unsplash.com/photo-1598103442097-8b74394b95c6?w=600&q=80",
+    rice: "https://images.unsplash.com/photo-1516684732162-798a0062be99?w=600&q=80",
+    fattah: "https://images.unsplash.com/photo-1547592180-85f173990554?w=600&q=80",
+    milkshake: "https://images.unsplash.com/photo-1572490122747-3968b75cc699?w=600&q=80",
+    milkshakeChoc: "https://images.unsplash.com/photo-1541658016709-82535e94bc69?w=600&q=80",
+    smoothie: "https://images.unsplash.com/photo-1505252585461-04db1eb84625?w=600&q=80",
+    avocadoShake: "https://images.unsplash.com/photo-1623065422902-30a2d299bbe4?w=600&q=80",
+    crepe: "https://images.unsplash.com/photo-1519676867240-f03562e64548?w=600&q=80",
+    juice: "https://images.unsplash.com/photo-1600271886742-f049cd451bba?w=600&q=80",
+    orangeJuice: "https://images.unsplash.com/photo-1613478223719-2ab802602423?w=600&q=80",
+    mangoJuice: "https://images.unsplash.com/photo-1546173159-315724a31696?w=600&q=80",
+    strawberryJuice: "https://images.unsplash.com/photo-1595981267035-7b04ca84a82d?w=600&q=80",
+    cocktail: "https://images.unsplash.com/photo-1544145945-f90425340c7e?w=600&q=80",
+    soda: "https://images.unsplash.com/photo-1581636625402-29b2a704ef13?w=600&q=80"
+  };
+
+  const ITEMS = [
+    // ☕ المشروبات الساخنة
+    { cat: "المشروبات الساخنة", name: "شاي", price: 15000, img: IMG.tea },
+    { cat: "المشروبات الساخنة", name: "شاي بالنعنع", price: 18000, img: IMG.tea },
+    { cat: "المشروبات الساخنة", name: "شاي بالقرفة", price: 18000, img: IMG.tea },
+    { cat: "المشروبات الساخنة", name: "شاي اخضر", price: 15000, img: IMG.tea },
+    { cat: "المشروبات الساخنة", name: "زهورات", price: 15000, img: IMG.tea },
+    { cat: "المشروبات الساخنة", name: "اسبريسو", price: 25000, img: IMG.coffee },
+    { cat: "المشروبات الساخنة", name: "اسبريسو دبل", price: 35000, img: IMG.coffee },
+    { cat: "المشروبات الساخنة", name: "ظرف شاي", price: 20000, img: IMG.tea },
+    { cat: "المشروبات الساخنة", name: "قهوة سادة", price: 20000, img: IMG.coffee },
+    { cat: "المشروبات الساخنة", name: "قهوة حلوة", price: 20000, img: IMG.coffee },
+    { cat: "المشروبات الساخنة", name: "قهوة وسط", price: 20000, img: IMG.coffee },
+    { cat: "المشروبات الساخنة", name: "قهوة دبل", price: 30000, img: IMG.coffee },
+    { cat: "المشروبات الساخنة", name: "كابتشينو", price: 35000, img: IMG.cappuccino },
+    { cat: "المشروبات الساخنة", name: "كمون وليمون", price: 20000, img: IMG.tea },
+    { cat: "المشروبات الساخنة", name: "ليمون وزنجبيل غلي", price: 25000, img: IMG.tea },
+    { cat: "المشروبات الساخنة", name: "هوت شوكلت", price: 35000, img: IMG.hotChoc },
+    { cat: "المشروبات الساخنة", name: "نسكافيه سادة", price: 25000, img: IMG.coffee },
+    { cat: "المشروبات الساخنة", name: "نسكافيه بحليب", price: 30000, img: IMG.coffee },
+    { cat: "المشروبات الساخنة", name: "ميلو سادة", price: 30000, img: IMG.hotChoc },
+    { cat: "المشروبات الساخنة", name: "هوت شوكلت مع شوكولا", price: 40000, img: IMG.hotChoc },
+
+    // 💨 الأراكيل
+    { cat: "الأراكيل", name: "معسل فاخر", price: 50000, img: IMG.shisha },
+    { cat: "الأراكيل", name: "معسل نخلة مصري", price: 45000, img: IMG.shisha },
+    { cat: "الأراكيل", name: "معسل بوليو", price: 50000, img: IMG.shisha },
+    { cat: "الأراكيل", name: "معسل لوف", price: 50000, img: IMG.shisha },
+    { cat: "الأراكيل", name: "معسل عنب", price: 45000, img: IMG.shisha },
+    { cat: "الأراكيل", name: "معسل عنب ونعنع", price: 45000, img: IMG.shisha },
+    { cat: "الأراكيل", name: "معسل فريز", price: 45000, img: IMG.shisha },
+    { cat: "الأراكيل", name: "معسل مسكة", price: 50000, img: IMG.shisha },
+    { cat: "الأراكيل", name: "تنباك", price: 60000, img: IMG.shisha },
+    { cat: "الأراكيل", name: "راس اركيلة", price: 70000, img: IMG.shisha },
+    { cat: "الأراكيل", name: "دربيج صحي", price: 55000, img: IMG.shisha },
+
+    // 🍖 مشاوي
+    { cat: "مشاوي", name: "نصف فروج مسحب مطفي", price: 85000, img: IMG.grilledChicken },
+    { cat: "مشاوي", name: "كبة مشوية", price: 40000, img: IMG.kibbeh },
+    { cat: "مشاوي", name: "منسف دجاج", price: 120000, img: IMG.mansaf },
+    { cat: "مشاوي", name: "منسف لحمة", price: 150000, img: IMG.mansaf },
+    { cat: "مشاوي", name: "نصف فروج مسحب", price: 80000, img: IMG.grilledChicken },
+    { cat: "مشاوي", name: "نصف كيلو شقف", price: 130000, img: IMG.shish },
+    { cat: "مشاوي", name: "نصف كيلو شيش", price: 140000, img: IMG.shish },
+    { cat: "مشاوي", name: "نصف كيلو شيش مطفي", price: 145000, img: IMG.shish },
+    { cat: "مشاوي", name: "نصف كيلو طوشكا", price: 135000, img: IMG.kebab },
+    { cat: "مشاوي", name: "نصف كيلو كباب لحم", price: 140000, img: IMG.kebab },
+    { cat: "مشاوي", name: "نصف كيلو كباب بالدجاج بالفرفن", price: 130000, img: IMG.kebab },
+    { cat: "مشاوي", name: "نصف كيلو لحمة بالصنعية بالبندورة", price: 120000, img: IMG.grill },
+    { cat: "مشاوي", name: "نصف كيلو لحمة بالصنعية بالطحينة", price: 120000, img: IMG.grill },
+    { cat: "مشاوي", name: "نصف كيلو جوانح", price: 90000, img: IMG.grilledChicken },
+
+    // 🌯 الشاورما
+    { cat: "الشاورما", name: "شاورما دجاج", price: 45000, img: IMG.shawarmaWrap },
+    { cat: "الشاورما", name: "شاورما دجاج عربي", price: 50000, img: IMG.shawarma },
+    { cat: "الشاورما", name: "شاورما دجاج سوري", price: 50000, img: IMG.shawarmaWrap },
+    { cat: "الشاورما", name: "شاورما دجاج سوري دبل", price: 80000, img: IMG.shawarmaWrap },
+    { cat: "الشاورما", name: "شاورما دجاج جبنة", price: 60000, img: IMG.shawarmaWrap },
+    { cat: "الشاورما", name: "برك شاورما", price: 35000, img: IMG.shawarma },
+    { cat: "الشاورما", name: "وجبة بيرق شاورما", price: 75000, img: IMG.shawarma },
+    { cat: "الشاورما", name: "وجبة شاورما عربي", price: 85000, img: IMG.shawarma },
+    { cat: "الشاورما", name: "وجبة شاورما عربي دبل", price: 110000, img: IMG.shawarma },
+    { cat: "الشاورما", name: "وجبة بانية شاورما", price: 85000, img: IMG.shawarma },
+    { cat: "الشاورما", name: "وجبة طوشكا شاورما", price: 85000, img: IMG.shawarma },
+    { cat: "الشاورما", name: "وجبة ربع كيلو شاورما", price: 100000, img: IMG.shawarma },
+    { cat: "الشاورما", name: "وجبة نصف كيلو شاورما", price: 160000, img: IMG.shawarma },
+    { cat: "الشاورما", name: "وجبة كيلو شاورما", price: 300000, img: IMG.shawarma },
+
+    // 🍔 السندويش والبرغر
+    { cat: "السندويش والبرغر", name: "سندويش شيش", price: 55000, img: IMG.sandwich },
+    { cat: "السندويش والبرغر", name: "سندويش شيش دبل", price: 85000, img: IMG.sandwich },
+    { cat: "السندويش والبرغر", name: "سندويش شيش جبنة وذرة", price: 65000, img: IMG.sandwich },
+    { cat: "السندويش والبرغر", name: "مكسيكانو", price: 55000, img: IMG.sandwich },
+    { cat: "السندويش والبرغر", name: "فيليه", price: 55000, img: IMG.sandwich },
+    { cat: "السندويش والبرغر", name: "فاهيتا", price: 55000, img: IMG.sandwich },
+    { cat: "السندويش والبرغر", name: "فرانشيسكو", price: 55000, img: IMG.sandwich },
+    { cat: "السندويش والبرغر", name: "زنجر", price: 50000, img: IMG.burgerChicken },
+    { cat: "السندويش والبرغر", name: "كريسبي", price: 50000, img: IMG.burgerChicken },
+    { cat: "السندويش والبرغر", name: "سبايسي", price: 50000, img: IMG.burgerChicken },
+    { cat: "السندويش والبرغر", name: "سكالوب", price: 50000, img: IMG.burgerChicken },
+    { cat: "السندويش والبرغر", name: "برغر دجاج", price: 50000, img: IMG.burgerChicken },
+    { cat: "السندويش والبرغر", name: "برغر لحم", price: 60000, img: IMG.burger },
+    { cat: "السندويش والبرغر", name: "دوبل ميكس دجاج", price: 80000, img: IMG.burger },
+    { cat: "السندويش والبرغر", name: "دوبل ميكس لحم", price: 90000, img: IMG.burger },
+    { cat: "السندويش والبرغر", name: "برغر بروستد", price: 65000, img: IMG.burgerChicken },
+
+    // 🍱 الوجبات
+    { cat: "الوجبات", name: "وجبة كريسبي (4 قطع)", price: 110000, img: IMG.crispyMeal },
+    { cat: "الوجبات", name: "وجبة سبايسي (4 قطع)", price: 110000, img: IMG.crispyMeal },
+    { cat: "الوجبات", name: "وجبة سكالوب (4 قطع)", price: 110000, img: IMG.crispyMeal },
+    { cat: "الوجبات", name: "وجبة شيش", price: 120000, img: IMG.meal },
+    { cat: "الوجبات", name: "وجبة شيش جبنة وذرة", price: 130000, img: IMG.meal },
+    { cat: "الوجبات", name: "وجبة مكسيكانو", price: 115000, img: IMG.meal },
+    { cat: "الوجبات", name: "وجبة فرانشيسكو", price: 115000, img: IMG.meal },
+    { cat: "الوجبات", name: "وجبة فاهيتا", price: 115000, img: IMG.meal },
+    { cat: "الوجبات", name: "وجبة فيليه", price: 115000, img: IMG.meal },
+    { cat: "الوجبات", name: "وجبة برغر", price: 110000, img: IMG.burger },
+    { cat: "الوجبات", name: "وجبة زنجر", price: 110000, img: IMG.crispyMeal },
+    { cat: "الوجبات", name: "وجبة بروستد", price: 120000, img: IMG.crispyMeal },
+
+    // 🍕 بيتزا وفطائر
+    { cat: "بيتزا وفطائر", name: "بيتزا الفصول الأربعة", price: 80000, img: IMG.pizza },
+    { cat: "بيتزا وفطائر", name: "بيتزا سجق", price: 75000, img: IMG.pizza },
+    { cat: "بيتزا وفطائر", name: "بيتزا مرغريتا", price: 65000, img: IMG.pizza },
+    { cat: "بيتزا وفطائر", name: "فطيرة زعتر", price: 30000, img: IMG.zaatar },
+    { cat: "بيتزا وفطائر", name: "فطيرة فليفلة", price: 40000, img: IMG.manakish },
+    { cat: "بيتزا وفطائر", name: "فطيرة فليفلة مع قشقوان", price: 50000, img: IMG.manakish },
+    { cat: "بيتزا وفطائر", name: "فطيرة مرتديال مع قشقوان", price: 55000, img: IMG.manakish },
+    { cat: "بيتزا وفطائر", name: "فطيرة مرتديال", price: 45000, img: IMG.manakish },
+    { cat: "بيتزا وفطائر", name: "فطيرة جبنة", price: 50000, img: IMG.manakish },
+    { cat: "بيتزا وفطائر", name: "فطيرة زيتون", price: 35000, img: IMG.manakish },
+    { cat: "بيتزا وفطائر", name: "ميني بيتزا", price: 40000, img: IMG.pizza },
+    { cat: "بيتزا وفطائر", name: "فطيرة شيش مع قشقوان", price: 65000, img: IMG.manakish },
+    { cat: "بيتزا وفطائر", name: "فطيرة بيتزا شاورما", price: 70000, img: IMG.manakish },
+
+    // 🥗 مقبلات باردة
+    { cat: "مقبلات باردة", name: "حمص", price: 30000, img: IMG.hummus },
+    { cat: "مقبلات باردة", name: "متبل", price: 30000, img: IMG.hummus },
+    { cat: "مقبلات باردة", name: "بابا غنوج", price: 30000, img: IMG.hummus },
+    { cat: "مقبلات باردة", name: "محشي بندورة", price: 35000, img: IMG.salad },
+    { cat: "مقبلات باردة", name: "كول سلو", price: 25000, img: IMG.salad },
+    { cat: "مقبلات باردة", name: "محمرة", price: 35000, img: IMG.hummus },
+    { cat: "مقبلات باردة", name: "بالنجي", price: 30000, img: IMG.hummus },
+    { cat: "مقبلات باردة", name: "مارميزو دجاج", price: 40000, img: IMG.salad },
+    { cat: "مقبلات باردة", name: "مكدوس", price: 35000, img: IMG.salad },
+    { cat: "مقبلات باردة", name: "كريم نوم", price: 30000, img: IMG.salad },
+    { cat: "مقبلات باردة", name: "مخلل", price: 15000, img: IMG.salad },
+    { cat: "مقبلات باردة", name: "حمص وزيت زيتون", price: 35000, img: IMG.hummus },
+    { cat: "مقبلات باردة", name: "كاس لبن عيران", price: 20000, img: IMG.salad },
+    { cat: "مقبلات باردة", name: "سلطة شرقية", price: 35000, img: IMG.salad },
+    { cat: "مقبلات باردة", name: "سلطة أرمنية", price: 35000, img: IMG.tabbouleh },
+    { cat: "مقبلات باردة", name: "سلطة سيزر", price: 45000, img: IMG.caesar },
+    { cat: "مقبلات باردة", name: "تبولة", price: 30000, img: IMG.tabbouleh },
+    { cat: "مقبلات باردة", name: "فتوش", price: 30000, img: IMG.salad },
+    { cat: "مقبلات باردة", name: "جرجير", price: 25000, img: IMG.salad },
+    { cat: "مقبلات باردة", name: "مسخن حضرة", price: 50000, img: IMG.grilledChicken },
+
+    // 🍳 وجبات ساخنة
+    { cat: "وجبات ساخنة", name: "كبة حميص", price: 55000, img: IMG.kibbeh },
+    { cat: "وجبات ساخنة", name: "بطاطا فروج", price: 60000, img: IMG.fries },
+    { cat: "وجبات ساخنة", name: "برك جبنة", price: 40000, img: IMG.manakish },
+    { cat: "وجبات ساخنة", name: "شرحات مطفاية", price: 120000, img: IMG.grilledChicken },
+    { cat: "وجبات ساخنة", name: "كوردون بلو", price: 100000, img: IMG.cordonBleu },
+    { cat: "وجبات ساخنة", name: "زنجر", price: 80000, img: IMG.crispyMeal },
+    { cat: "وجبات ساخنة", name: "سبايسي", price: 80000, img: IMG.crispyMeal },
+    { cat: "وجبات ساخنة", name: "كريسبي", price: 80000, img: IMG.crispyMeal },
+    { cat: "وجبات ساخنة", name: "سكالوب بالجبنة", price: 85000, img: IMG.cordonBleu },
+    { cat: "وجبات ساخنة", name: "فرانشيسكو", price: 85000, img: IMG.grilledChicken },
+    { cat: "وجبات ساخنة", name: "فيليه دجاج", price: 85000, img: IMG.grilledChicken },
+    { cat: "وجبات ساخنة", name: "فاهيتا", price: 85000, img: IMG.grilledChicken },
+    { cat: "وجبات ساخنة", name: "ناغتس", price: 60000, img: IMG.crispyMeal },
+    { cat: "وجبات ساخنة", name: "مكسيكانو مع رز", price: 95000, img: IMG.rice },
+    { cat: "وجبات ساخنة", name: "همبرغر دجاج", price: 80000, img: IMG.burgerChicken },
+    { cat: "وجبات ساخنة", name: "همبرغر دجاج بالجبنة", price: 90000, img: IMG.burgerChicken },
+    { cat: "وجبات ساخنة", name: "همبرغر لحمجة", price: 100000, img: IMG.burger },
+    { cat: "وجبات ساخنة", name: "سندويش بطاطا", price: 40000, img: IMG.sandwich },
+    { cat: "وجبات ساخنة", name: "سندويش شيش", price: 55000, img: IMG.sandwich },
+    { cat: "وجبات ساخنة", name: "صحن رز", price: 30000, img: IMG.rice },
+    { cat: "وجبات ساخنة", name: "سندويش بطاطا دبل", price: 60000, img: IMG.sandwich },
+
+    // 🍟 مقبلات ساخنة
+    { cat: "مقبلات ساخنة", name: "بطاطس محمرة", price: 25000, img: IMG.fries },
+    { cat: "مقبلات ساخنة", name: "بطاطا حارة", price: 30000, img: IMG.fries },
+    { cat: "مقبلات ساخنة", name: "بطاطا مقرمشة", price: 30000, img: IMG.fries },
+    { cat: "مقبلات ساخنة", name: "مسخن باللحمة", price: 65000, img: IMG.grilledChicken },
+    { cat: "مقبلات ساخنة", name: "قلاية باللحمة", price: 70000, img: IMG.grilledChicken },
+    { cat: "مقبلات ساخنة", name: "مخلل", price: 15000, img: IMG.salad },
+
+    // 🍲 فتات
+    { cat: "فتات", name: "فتة حلبية", price: 45000, img: IMG.fattah },
+    { cat: "فتات", name: "فتة صاجية", price: 45000, img: IMG.fattah },
+    { cat: "فتات", name: "فتة دجاج", price: 50000, img: IMG.fattah },
+    { cat: "فتات", name: "فتة حمص", price: 40000, img: IMG.fattah },
+
+    // 🥤 فرابتشينو وعصائر
+    { cat: "فرابتشينو وعصائر", name: "كوكيتيل حليب وموز", price: 40000, img: IMG.milkshake },
+    { cat: "فرابتشينو وعصائر", name: "كوكيتيل حليب وموز وفريز", price: 45000, img: IMG.smoothie },
+    { cat: "فرابتشينو وعصائر", name: "كوكيتيل حليب وفريز", price: 40000, img: IMG.strawberryJuice },
+    { cat: "فرابتشينو وعصائر", name: "كوكيتيل حليب وموز وشوكولا", price: 45000, img: IMG.milkshakeChoc },
+    { cat: "فرابتشينو وعصائر", name: "كوكيتيل موز وفريز", price: 40000, img: IMG.smoothie },
+    { cat: "فرابتشينو وعصائر", name: "كوكيتيل حليب وموز وقشطة ومكسرات", price: 55000, img: IMG.milkshake },
+    { cat: "فرابتشينو وعصائر", name: "كوكيتيل فواكه", price: 45000, img: IMG.smoothie },
+    { cat: "فرابتشينو وعصائر", name: "كوكيتيل كيوي", price: 40000, img: IMG.smoothie },
+    { cat: "فرابتشينو وعصائر", name: "ليمون فريش", price: 30000, img: IMG.juice },
+    { cat: "فرابتشينو وعصائر", name: "عصير بولو (ليمون ونعنع)", price: 35000, img: IMG.juice },
+    { cat: "فرابتشينو وعصائر", name: "منغا عصير", price: 35000, img: IMG.mangoJuice },
+    { cat: "فرابتشينو وعصائر", name: "ميلك شيك فريز", price: 45000, img: IMG.strawberryJuice },
+    { cat: "فرابتشينو وعصائر", name: "ميلك شيك شوكولا", price: 45000, img: IMG.milkshakeChoc },
+    { cat: "فرابتشينو وعصائر", name: "ميلك شيك أوريو", price: 50000, img: IMG.milkshakeChoc },
+    { cat: "فرابتشينو وعصائر", name: "ميلك شيك حليب", price: 40000, img: IMG.milkshake },
+    { cat: "فرابتشينو وعصائر", name: "افوكادو شوكولا و قشطة", price: 50000, img: IMG.avocadoShake },
+    { cat: "فرابتشينو وعصائر", name: "افوكادو شوكولا", price: 45000, img: IMG.avocadoShake },
+    { cat: "فرابتشينو وعصائر", name: "افوكادو فواكه", price: 45000, img: IMG.avocadoShake },
+    { cat: "فرابتشينو وعصائر", name: "افوكادو قشطة", price: 45000, img: IMG.avocadoShake },
+    { cat: "فرابتشينو وعصائر", name: "افوكادو قشطة وعسل", price: 50000, img: IMG.avocadoShake },
+    { cat: "فرابتشينو وعصائر", name: "افوكادو جلاكسى", price: 55000, img: IMG.avocadoShake },
+    { cat: "فرابتشينو وعصائر", name: "افوكادو مكسرات", price: 55000, img: IMG.avocadoShake },
+    { cat: "فرابتشينو وعصائر", name: "كريب شوكولا", price: 40000, img: IMG.crepe },
+    { cat: "فرابتشينو وعصائر", name: "كريب قشطة", price: 40000, img: IMG.crepe },
+    { cat: "فرابتشينو وعصائر", name: "كريب فواكه", price: 45000, img: IMG.crepe },
+    { cat: "فرابتشينو وعصائر", name: "كريب اكسترا", price: 55000, img: IMG.crepe },
+
+    // 🍹 كوكتيلات ومشروبات باردة
+    { cat: "كوكتيلات ومشروبات باردة", name: "أناناس", price: 35000, img: IMG.juice },
+    { cat: "كوكتيلات ومشروبات باردة", name: "برتقال فريش", price: 35000, img: IMG.orangeJuice },
+    { cat: "كوكتيلات ومشروبات باردة", name: "رمان", price: 40000, img: IMG.juice },
+    { cat: "كوكتيلات ومشروبات باردة", name: "فريز", price: 35000, img: IMG.strawberryJuice },
+    { cat: "كوكتيلات ومشروبات باردة", name: "توت شامي", price: 40000, img: IMG.juice },
+    { cat: "كوكتيلات ومشروبات باردة", name: "جاك كبيرة", price: 25000, img: IMG.soda },
+    { cat: "كوكتيلات ومشروبات باردة", name: "سكن اب", price: 25000, img: IMG.soda },
+    { cat: "كوكتيلات ومشروبات باردة", name: "بيبسي", price: 15000, img: IMG.soda },
+    { cat: "كوكتيلات ومشروبات باردة", name: "ميرندا برتقال", price: 15000, img: IMG.soda },
+    { cat: "كوكتيلات ومشروبات باردة", name: "ميرندا تفاح", price: 15000, img: IMG.soda },
+    { cat: "كوكتيلات ومشروبات باردة", name: "بيبسي دايت", price: 15000, img: IMG.soda },
+    { cat: "كوكتيلات ومشروبات باردة", name: "سفن اب دايت", price: 15000, img: IMG.soda },
+    { cat: "كوكتيلات ومشروبات باردة", name: "غراندين", price: 35000, img: IMG.cocktail },
+    { cat: "كوكتيلات ومشروبات باردة", name: "لبن عيران", price: 20000, img: IMG.juice },
+    { cat: "كوكتيلات ومشروبات باردة", name: "ليمون", price: 30000, img: IMG.juice },
+    { cat: "كوكتيلات ومشروبات باردة", name: "كولا ليتر", price: 30000, img: IMG.soda },
+    { cat: "كوكتيلات ومشروبات باردة", name: "سفن اب ليتر", price: 30000, img: IMG.soda }
+  ];
+
+  const SETTINGS = {
+    name: "بيت الباشا",
+    subtitle: "حيث تلتقي نكهة الضيافة بأجواء الراحة",
+    status: "مفتوح الآن",
+    statusType: "open",
+    heroImage: "https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?w=1600&q=80",
+    logoType: "svg", logoUrl: "", theme: "royal", menuLayout: "grid", categoryOrder: [],
+    showHero: true, showCallButton: true, showWhatsapp: true, showStatus: true,
+    showPopular: false, showOffers: false, showPrepTime: false
+  };
+
+  $("btn").onclick = async () => {
+    if (!confirm("هل أنت متأكد؟ سيتم استبدال البيانات الحالية.")) return;
+    const btn = $("btn");
+    btn.disabled = true; btn.textContent = "⏳ جاري الترحيل...";
+    $("progress").classList.add("show"); $("progressBar").style.width = "20%";
+    $("status").textContent = "جاري تجهيز الأصناف...";
+
+    try {
+      const itemsWithIds = ITEMS.map((item, i) => ({
+        id: genId() + i.toString(36),
+        category: item.cat, name: item.name, price: item.price, description: "",
+        imageUrl: item.img || "", isPopular: false, isOffer: false, offerPrice: 0, prepTime: 0, createdAt: Date.now()
+      }));
+
+      $("progressBar").style.width = "60%"; $("status").textContent = "جاري رفع الأصناف إلى Firebase...";
+      await setDoc(doc(db, "menu", "all"), { items: itemsWithIds });
+
+      $("progressBar").style.width = "90%"; $("status").textContent = "جاري حفظ الإعدادات...";
+      await setDoc(doc(db, "settings", "info"), SETTINGS);
+
+      $("progressBar").style.width = "100%"; $("status").textContent = "✅ تم الترحيل بنجاح!";
+      $("status").className = "status success"; btn.textContent = "✅ تم الترحيل";
+
+    } catch (err) {
+      console.error(err);
+      $("status").textContent = "❌ فشل: " + (err.message || "خطأ غير معروف");
+      $("status").className = "status error"; btn.disabled = false; btn.textContent = "🚀 إعادة المحاولة"; $("progressBar").style.width = "0%";
+    }
+  };
+</script>
+</body>
+</html>
