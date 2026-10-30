@@ -415,16 +415,27 @@ img{display:block;max-width:100%}
         <button class="btn btn-ghost btn-sm" id="resetCategoryOrderBtn" style="margin-top:10px">🔄 إعادة الترتيب</button>
       </div>
 
+      <!-- ====== NEW SECTION: TOGGLES FOR EVERYTHING ====== -->
       <div class="card-box">
-        <div class="card-box-title">✨ الميزات الظاهرة للزبون</div>
+        <div class="card-box-title">👁️ إظهار / إخفاء العناصر</div>
         <div class="toggle-group">
-          <div class="toggle-row"><div class="toggle-info"><div class="toggle-title">👁️ إظهار الواجهة العلوية</div><div class="toggle-desc">اللوجو + الاسم + الوصف (إذا أطفأت، يبدأ المنيو مباشرة)</div></div><label class="toggle-switch"><input type="checkbox" id="setShowHero"><span class="toggle-slider"></span></label></div>
-          <div class="toggle-row"><div class="toggle-info"><div class="toggle-title">⭐ قسم "الأكثر طلباً"</div></div><label class="toggle-switch"><input type="checkbox" id="setShowPopular"><span class="toggle-slider"></span></label></div>
-          <div class="toggle-row"><div class="toggle-info"><div class="toggle-title">🔥 قسم "عروض اليوم"</div></div><label class="toggle-switch"><input type="checkbox" id="setShowOffers"><span class="toggle-slider"></span></label></div>
-          <div class="toggle-row"><div class="toggle-info"><div class="toggle-title">🕐 وقت التحضير</div></div><label class="toggle-switch"><input type="checkbox" id="setShowPrepTime"><span class="toggle-slider"></span></label></div>
-          <div class="toggle-row"><div class="toggle-info"><div class="toggle-title">📞 زر "اتصل مباشرة"</div></div><label class="toggle-switch"><input type="checkbox" id="setShowCallButton"><span class="toggle-slider"></span></label></div>
+          <div class="toggle-row"><div class="toggle-info"><div class="toggle-title">🖼️ الواجهة العلوية (اللوجو والاسم)</div><div class="toggle-desc">إظهار أو إخفاء اللوجو واسم المطعم من أعلى الصفحة</div></div><label class="toggle-switch"><input type="checkbox" id="setShowHero"><span class="toggle-slider"></span></label></div>
+          
+          <div class="toggle-row"><div class="toggle-info"><div class="toggle-title">📞 زر الاتصال (الهاتف)</div><div class="toggle-desc">إظهار أو إخفاء الزر العائم للاتصال المباشر</div></div><label class="toggle-switch"><input type="checkbox" id="setShowCallButton"><span class="toggle-slider"></span></label></div>
+          
+          <div class="toggle-row"><div class="toggle-info"><div class="toggle-title">💬 زر الواتساب</div><div class="toggle-desc">إظهار أو إخفاء الزر العائم للواتساب</div></div><label class="toggle-switch"><input type="checkbox" id="setShowWhatsapp"><span class="toggle-slider"></span></label></div>
+
+          <div class="toggle-row"><div class="toggle-info"><div class="toggle-title">🟢 شارة الحالة</div><div class="toggle-desc">إظهار أو إخفاء شارة (مفتوح / مغلق) تحت الاسم</div></div><label class="toggle-switch"><input type="checkbox" id="setShowStatus"><span class="toggle-slider"></span></label></div>
+
+          <div class="toggle-row"><div class="toggle-info"><div class="toggle-title">⭐ قسم "الأكثر طلباً"</div><div class="toggle-desc">إظهار أو إخفاء قسم الأصناف المميزة</div></div><label class="toggle-switch"><input type="checkbox" id="setShowPopular"><span class="toggle-slider"></span></label></div>
+          
+          <div class="toggle-row"><div class="toggle-info"><div class="toggle-title">🔥 قسم "عروض اليوم"</div><div class="toggle-desc">إظهار أو إخفاء قسم العروض الخاصة</div></div><label class="toggle-switch"><input type="checkbox" id="setShowOffers"><span class="toggle-slider"></span></label></div>
+
+          <div class="toggle-row"><div class="toggle-info"><div class="toggle-title">🕐 وقت التحضير</div><div class="toggle-desc">إظهار أو إخفاء وقت التحضير تحت كل صنف</div></div><label class="toggle-switch"><input type="checkbox" id="setShowPrepTime"><span class="toggle-slider"></span></label></div>
         </div>
       </div>
+      <!-- ============================================== -->
+
       <button class="btn btn-primary btn-full" id="saveDesignBtn">💾 حفظ إعدادات التصميم</button>
     </section>
 
@@ -493,8 +504,14 @@ img{display:block;max-width:100%}
     whatsapp: "", whatsappDisplay: "", phone: "", phoneDisplay: "",
     address: "", mapUrl: "", heroImage: "",
     logoType: "svg", logoUrl: "", theme: "royal", menuLayout: "grid",
-    categoryOrder: [], showHero: true,
-    showPopular: false, showOffers: false, showPrepTime: false, showCallButton: false
+    categoryOrder: [],
+    showHero: true,
+    showCallButton: true,
+    showWhatsapp: true,
+    showStatus: true,
+    showPopular: false,
+    showOffers: false,
+    showPrepTime: false
   };
 
   let allItems = [], editingId = null, currentImageUrl = "", settings = { ...DEFAULT_SETTINGS };
@@ -846,11 +863,16 @@ img{display:block;max-width:100%}
     if (settings.logoUrl) $("logoImgPreview").innerHTML = `<img src="${settings.logoUrl}" style="object-fit:contain;border-radius:50%;" alt="">`;
     else $("logoImgPreview").innerHTML = `<div class="image-preview-icon">🖼️</div>`;
     $("logoUrlGroup").style.display = logoType === "image" ? "block" : "none";
+
+    // Load Toggles
     $("setShowHero").checked = settings.showHero !== false;
+    $("setShowCallButton").checked = settings.showCallButton !== false;
+    $("setShowWhatsapp").checked = settings.showWhatsapp !== false;
+    $("setShowStatus").checked = settings.showStatus !== false;
     $("setShowPopular").checked = settings.showPopular === true;
     $("setShowOffers").checked = settings.showOffers === true;
     $("setShowPrepTime").checked = settings.showPrepTime === true;
-    $("setShowCallButton").checked = settings.showCallButton === true;
+
     renderCategoryOrderList();
   }
 
@@ -888,10 +910,12 @@ img{display:block;max-width:100%}
       logoType: logoInput ? logoInput.value : "svg",
       logoUrl: $("setLogoUrl").value.trim(),
       showHero: $("setShowHero").checked,
+      showCallButton: $("setShowCallButton").checked,
+      showWhatsapp: $("setShowWhatsapp").checked,
+      showStatus: $("setShowStatus").checked,
       showPopular: $("setShowPopular").checked,
       showOffers: $("setShowOffers").checked,
-      showPrepTime: $("setShowPrepTime").checked,
-      showCallButton: $("setShowCallButton").checked
+      showPrepTime: $("setShowPrepTime").checked
     };
     try {
       await setDoc(doc(db, "settings", "info"), data, { merge: true });
