@@ -1,0 +1,760 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl" data-theme="royal">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0">
+<meta name="theme-color" content="#0a0a0a">
+<title>بيت الباشا | قائمة الطعام</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&family=Tajawal:wght@300;400;500;700;900&display=swap" rel="stylesheet">
+<!-- FontAwesome Icons -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+<style>
+/* ============ THEMES ============ */
+:root, [data-theme="royal"] {
+  --bg-main: #0a0a0a; --card-bg: #141414; --gold: #D4AF37; --gold-light: #F3E5AB;
+  --text-main: #FDFBF7; --text-muted: #888; --border: rgba(212, 175, 55, 0.15);
+  --bg-3: #1A1A1A; --nav-bg: rgba(10, 10, 10, 0.88);
+  --status-open: #25D366; --status-orders: #F59E0B; --status-closed: #E10600;
+  --hero-overlay: linear-gradient(to bottom, rgba(10,10,10,0.4), rgba(10,10,10,0.85));
+}
+[data-theme="white-gold"] {
+  --bg-main: #F8F9FA; --card-bg: #FFFFFF; --gold: #C9A227; --gold-light: #D4AF37;
+  --text-main: #1A1A1A; --text-muted: #555; --border: rgba(201, 162, 39, 0.2);
+  --bg-3: #F1F3F5; --nav-bg: rgba(255, 255, 255, 0.92);
+  --status-open: #25D366; --status-orders: #F59E0B; --status-closed: #E10600;
+  --hero-overlay: linear-gradient(to bottom, rgba(248,249,250,0.5), rgba(248,249,250,0.95));
+}
+[data-theme="dark-red"] {
+  --bg-main: #0a0a0a; --card-bg: #141414; --gold: #E10600; --gold-light: #FF4D4D;
+  --text-main: #F5F5F5; --text-muted: #A0A0A0; --border: rgba(225, 6, 0, 0.15);
+  --bg-3: #1A1A1A; --nav-bg: rgba(10, 10, 10, 0.88);
+  --status-open: #25D366; --status-orders: #F59E0B; --status-closed: #E10600;
+  --hero-overlay: linear-gradient(to bottom, rgba(10,10,10,0.4), rgba(10,10,10,0.85));
+}
+[data-theme="white-red"] {
+  --bg-main: #FFFFFF; --card-bg: #FFFFFF; --gold: #E10600; --gold-light: #FF4D4D;
+  --text-main: #1A1A1A; --text-muted: #555; --border: rgba(225, 6, 0, 0.15);
+  --bg-3: #F8F9FA; --nav-bg: rgba(255, 255, 255, 0.92);
+  --status-open: #25D366; --status-orders: #F59E0B; --status-closed: #E10600;
+  --hero-overlay: linear-gradient(to bottom, rgba(255,255,255,0.5), rgba(255,255,255,0.95));
+}
+[data-theme="classic"] {
+  --bg-main: #0B0B0F; --card-bg: #1A1A24; --gold: #D4AF37; --gold-light: #E5C158;
+  --text-main: #F5F5F5; --text-muted: #A0A0B0; --border: rgba(212, 175, 55, 0.2);
+  --bg-3: #16161D; --nav-bg: rgba(11, 11, 15, 0.88);
+  --status-open: #25D366; --status-orders: #F59E0B; --status-closed: #1E3A8A;
+  --hero-overlay: linear-gradient(to bottom, rgba(11,11,15,0.4), rgba(11,11,15,0.85));
+}
+[data-theme="midnight"] {
+  --bg-main: #0A1628; --card-bg: #152545; --gold: #C9A961; --gold-light: #DBC07D;
+  --text-main: #FFFFFF; --text-muted: #A0B0D0; --border: rgba(201, 169, 97, 0.25);
+  --bg-3: #0F1E35; --nav-bg: rgba(10, 22, 40, 0.88);
+  --status-open: #25D366; --status-orders: #F59E0B; --status-closed: #E10600;
+  --hero-overlay: linear-gradient(to bottom, rgba(10,22,40,0.4), rgba(10,22,40,0.85));
+}
+
+/* ============ BASE ============ */
+* { margin: 0; padding: 0; box-sizing: border-box; }
+html { scroll-behavior: smooth; -webkit-tap-highlight-color: transparent; }
+body {
+  font-family: 'Tajawal', sans-serif; background-color: var(--bg-main); color: var(--text-main);
+  line-height: 1.6; background-image: radial-gradient(circle at top, rgba(255,255,255,0.03) 0%, transparent 70%);
+  background-attachment: fixed; padding-bottom: 80px; -webkit-font-smoothing: antialiased;
+  transition: background 0.4s, color 0.4s; min-height: 100vh;
+}
+
+/* ============ HERO ============ */
+.hero {
+  padding: 55px 20px 45px; text-align: center;
+  border-bottom: 1px solid var(--border); position: relative;
+  overflow: hidden;
+}
+.hero.has-image {
+  background-size: cover; background-position: center; background-repeat: no-repeat;
+}
+.hero.has-image::before {
+  content: ''; position: absolute; inset: 0; background: var(--hero-overlay); z-index: 0;
+}
+.hero::after {
+  content: ''; position: absolute; top: -30%; left: 50%;
+  transform: translateX(-50%);
+  width: 500px; height: 500px;
+  background: radial-gradient(circle, rgba(212, 175, 55, 0.08) 0%, transparent 70%);
+  pointer-events: none; z-index: 0;
+}
+.hero > * { position: relative; z-index: 1; }
+.hero.hidden { display: none; }
+.hero-logo {
+  width: 90px; height: 90px; border-radius: 50%; border: 1.5px solid var(--gold);
+  display: flex; align-items: center; justify-content: center;
+  font-family: 'Amiri', serif; font-size: 28px; font-weight: 700; color: var(--gold);
+  margin: 0 auto 18px; background: var(--card-bg);
+  box-shadow: 0 0 0 6px rgba(212, 175, 55, 0.06), 0 0 60px rgba(212, 175, 55, 0.2);
+  overflow: hidden;
+  transition: transform 0.4s ease, box-shadow 0.4s ease;
+}
+.hero-logo:hover {
+  transform: scale(1.05);
+  box-shadow: 0 0 0 8px rgba(212, 175, 55, 0.1), 0 0 80px rgba(212, 175, 55, 0.3);
+}
+.hero-logo img { width: 100%; height: 100%; object-fit: contain; border-radius: 50%; }
+.hero-logo.text-red { color: #E10600; }
+.hero h1 {
+  font-family: 'Amiri', serif; font-size: 2.6em; font-weight: 700;
+  color: var(--gold); margin-bottom: 6px; letter-spacing: 0.5px;
+}
+.hero h2 {
+  font-size: 0.82em; font-weight: 400; letter-spacing: 10px;
+  color: var(--text-muted); margin-bottom: 14px; text-transform: uppercase;
+}
+.hero p {
+  font-size: 1.05em; color: var(--text-main);
+  max-width: 420px; margin: 0 auto; opacity: 0.8; font-weight: 300;
+}
+
+/* ============ STATUS BADGE ============ */
+.status-badge {
+  display: inline-flex; align-items: center; gap: 8px;
+  padding: 7px 18px;
+  border-radius: 22px; font-size: 13px; font-weight: 700;
+  margin-top: 18px; transition: all 0.3s;
+}
+.status-badge[hidden] { display: none; }
+.status-badge.open { background: rgba(37, 211, 102, 0.12); border: 1px solid rgba(37, 211, 102, 0.35); color: var(--status-open); }
+.status-badge.orders { background: rgba(245, 158, 11, 0.12); border: 1px solid rgba(245, 158, 11, 0.35); color: var(--status-orders); }
+.status-badge.closed { background: rgba(225, 6, 0, 0.12); border: 1px solid rgba(225, 6, 0, 0.35); color: var(--status-closed); }
+.status-dot {
+  width: 8px; height: 8px; border-radius: 50%; background: currentColor;
+  animation: pulse 2s infinite; flex-shrink: 0;
+}
+@keyframes pulse {
+  0%, 100% { box-shadow: 0 0 0 0 currentColor; opacity: 1; }
+  50% { box-shadow: 0 0 0 8px transparent; opacity: 0.7; }
+}
+
+/* ============ NAV ============ */
+.nav-wrapper {
+  position: sticky; top: 0; z-index: 100;
+  background: var(--nav-bg); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
+  border-bottom: 1px solid var(--border); padding: 14px 0;
+}
+.nav-categories {
+  display: flex; gap: 10px; overflow-x: auto;
+  scrollbar-width: none; -webkit-overflow-scrolling: touch;
+  padding: 0 18px; max-width: 1200px; margin: 0 auto;
+}
+.nav-categories::-webkit-scrollbar { display: none; }
+.nav-item {
+  display: flex; flex-direction: column; align-items: center; justify-content: center;
+  min-width: 90px; padding: 10px 8px; border-radius: 14px;
+  background: var(--card-bg); border: 1px solid var(--border);
+  text-decoration: none; color: var(--text-muted);
+  transition: all 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+  box-shadow: 0 3px 12px rgba(0,0,0,0.25); flex-shrink: 0;
+}
+.nav-item i {
+  font-size: 22px; color: var(--gold); margin-bottom: 8px;
+  transition: transform 0.35s ease;
+}
+.nav-item span.nav-label { font-size: 0.75em; font-weight: 700; white-space: nowrap; }
+.nav-item:hover, .nav-item.active {
+  color: var(--gold); border-color: var(--gold);
+  box-shadow: 0 8px 22px rgba(212, 175, 55, 0.15);
+  transform: translateY(-3px);
+}
+.nav-item:hover i, .nav-item.active i {
+  transform: scale(1.15);
+}
+.nav-item.special i { color: #FFC107; }
+.nav-item.special-offer i { color: #FF5252; }
+
+/* ============ MENU CONTAINER ============ */
+.menu-container { max-width: 1100px; margin: 0 auto; padding: 40px 18px; }
+.category-section { margin-bottom: 65px; scroll-margin-top: 130px; }
+
+/* ============ CATEGORY HEADER ============ */
+.category-header {
+  display: flex; flex-direction: column; align-items: center; text-align: center;
+  margin-bottom: 35px; padding: 10px 10px 25px;
+  animation: fadeInUp 0.5s ease both;
+}
+.category-icon-big {
+  width: 90px; height: 90px; border-radius: 50%;
+  background: radial-gradient(circle at 30% 30%, rgba(212, 175, 55, 0.12), var(--card-bg) 75%);
+  border: 1.5px solid var(--gold);
+  display: flex; align-items: center; justify-content: center;
+  margin-bottom: 18px; position: relative;
+  box-shadow: 0 0 0 6px rgba(212, 175, 55, 0.05), 0 12px 40px rgba(212, 175, 55, 0.2);
+  transition: transform 0.4s ease, box-shadow 0.4s ease;
+}
+.category-icon-big::before {
+  content: ''; position: absolute; inset: -10px; border-radius: 50%;
+  border: 1px dashed var(--gold); opacity: 0.25;
+  animation: rotateSlow 40s linear infinite;
+}
+.category-icon-big i {
+  font-size: 36px; color: var(--gold);
+  transition: transform 0.4s ease;
+}
+.category-header:hover .category-icon-big {
+  transform: scale(1.05);
+  box-shadow: 0 0 0 8px rgba(212, 175, 55, 0.08), 0 16px 50px rgba(212, 175, 55, 0.28);
+}
+.category-header:hover .category-icon-big i {
+  transform: scale(1.1);
+}
+.category-title {
+  font-family: 'Amiri', serif; font-size: 2em; font-weight: 700;
+  color: var(--gold); margin: 0; line-height: 1.3; letter-spacing: 0.5px;
+}
+.category-line {
+  display: flex; align-items: center; justify-content: center; gap: 12px;
+  margin-top: 12px;
+}
+.category-line::before, .category-line::after {
+  content: ''; height: 1px; width: 60px;
+  background: linear-gradient(90deg, transparent, var(--gold), transparent);
+}
+.category-line .dot {
+  width: 6px; height: 6px; border-radius: 50%; background: var(--gold);
+  box-shadow: 0 0 12px var(--gold);
+}
+
+/* ============ SPECIAL SECTIONS (Popular/Offers) ============ */
+.special-section { position: relative; }
+.special-section .category-icon-big {
+  background: radial-gradient(circle at 30% 30%, rgba(255, 193, 7, 0.2), var(--card-bg) 75%);
+  border-color: #FFC107;
+}
+.special-section .category-icon-big::before { border-color: #FFC107; }
+.special-section .category-icon-big i { color: #FFC107; }
+.special-section .category-title { color: #FFC107; }
+.special-section .category-line::before, .special-section .category-line::after {
+  background: linear-gradient(90deg, transparent, #FFC107, transparent);
+}
+.special-section .category-line .dot { background: #FFC107; box-shadow: 0 0 12px #FFC107; }
+
+.special-section.offers .category-icon-big {
+  background: radial-gradient(circle at 30% 30%, rgba(255, 82, 82, 0.2), var(--card-bg) 75%);
+  border-color: #FF5252;
+}
+.special-section.offers .category-icon-big::before { border-color: #FF5252; }
+.special-section.offers .category-icon-big i { color: #FF5252; }
+.special-section.offers .category-title { color: #FF5252; }
+.special-section.offers .category-line::before, .special-section.offers .category-line::after {
+  background: linear-gradient(90deg, transparent, #FF5252, transparent);
+}
+.special-section.offers .category-line .dot { background: #FF5252; box-shadow: 0 0 12px #FF5252; }
+
+/* ============ LAYOUTS ============ */
+.menu-grid {
+  display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px;
+}
+@media (min-width: 640px) { .menu-grid { grid-template-columns: repeat(3, 1fr); gap: 16px; } }
+@media (min-width: 1024px) { .menu-grid { grid-template-columns: repeat(4, 1fr); gap: 20px; } }
+
+.menu-list { display: flex; flex-direction: column; gap: 10px; }
+
+.menu-sections {
+  display: grid; grid-template-columns: 1fr; gap: 20px;
+}
+@media (min-width: 768px) { .menu-sections { grid-template-columns: repeat(2, 1fr); gap: 24px; } }
+
+/* ============ ITEM CARDS ============ */
+.item-card {
+  background: var(--card-bg); border: 1px solid var(--border); border-radius: 14px;
+  overflow: hidden; display: flex; flex-direction: column;
+  transition: transform 0.35s ease, box-shadow 0.35s ease, border-color 0.35s ease;
+  box-shadow: 0 8px 22px rgba(0,0,0,0.4);
+  animation: fadeInUp 0.4s ease both; position: relative;
+}
+.item-card:active { transform: scale(0.98); }
+@media (hover: hover) {
+  .item-card:hover {
+    transform: translateY(-5px); border-color: var(--gold);
+    box-shadow: 0 15px 35px rgba(212,175,55,0.15);
+  }
+  .item-card:hover .item-img { transform: scale(1.06); }
+}
+.item-badges {
+  position: absolute; top: 8px; right: 8px; display: flex; gap: 4px; z-index: 3; flex-wrap: wrap;
+}
+.item-badge {
+  font-size: 10px; padding: 3px 8px; border-radius: 8px; font-weight: 800;
+  color: #fff; backdrop-filter: blur(10px); box-shadow: 0 2px 8px rgba(0,0,0,0.3);
+}
+.item-badge.popular { background: linear-gradient(135deg, #FFC107, #FFA000); }
+.item-badge.offer { background: linear-gradient(135deg, #FF5252, #D32F2F); }
+
+.item-img-wrap {
+  position: relative; width: 100%; aspect-ratio: 4/3; overflow: hidden;
+  background: linear-gradient(135deg, var(--bg-3), var(--card-bg));
+}
+.img-fallback {
+  position: absolute; inset: 0; display: flex; align-items: center; justify-content: center;
+  color: var(--gold); opacity: 0.18; z-index: 1; pointer-events: none;
+}
+.img-fallback i { font-size: 48px; }
+.item-img {
+  position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover;
+  z-index: 2; opacity: 0; transition: opacity 0.5s ease, transform 0.6s ease;
+}
+.item-img.loaded { opacity: 1; }
+.item-content {
+  padding: 14px; text-align: center;
+  display: flex; flex-direction: column; justify-content: space-between; flex-grow: 1;
+}
+.item-name {
+  font-size: 1em; font-weight: 700; color: var(--text-main);
+  margin-bottom: 6px; line-height: 1.35;
+  overflow: hidden; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical;
+}
+.item-prep {
+  font-size: 0.72em; color: var(--text-muted);
+  display: inline-flex; align-items: center; gap: 4px; justify-content: center;
+  margin-bottom: 8px;
+}
+.item-price {
+  font-size: 1.05em; font-weight: 900; color: var(--gold);
+  margin-top: auto; background: rgba(212, 175, 55, 0.08);
+  padding: 5px 16px; border-radius: 20px;
+  display: inline-flex; align-items: center; gap: 8px; justify-content: center;
+  align-self: center;
+  border: 1px solid rgba(212, 175, 55, 0.22);
+  font-family: 'Tajawal', sans-serif; flex-wrap: wrap;
+}
+.item-price .old {
+  font-size: 0.75em; color: var(--text-muted); text-decoration: line-through;
+  font-weight: 500; opacity: 0.75;
+}
+.item-price span.currency { font-size: 0.8em; font-weight: 500; opacity: 0.85; }
+
+/* Sections layout — larger cards */
+.menu-sections .item-card .item-img-wrap { aspect-ratio: 16/10; }
+.menu-sections .item-card .item-name { font-size: 1.15em; margin-bottom: 8px; }
+.menu-sections .item-card .item-price { font-size: 1.15em; padding: 7px 20px; }
+.menu-sections .item-card .item-content { padding: 18px; }
+
+/* ============ LIST CARD ============ */
+.card-list {
+  display: flex; gap: 14px; background: var(--card-bg); border: 1px solid var(--border);
+  border-radius: 12px; overflow: hidden; padding: 10px; align-items: center;
+  transition: all 0.3s ease; animation: fadeInUp 0.35s ease both;
+}
+.card-list:hover { border-color: var(--gold); box-shadow: 0 8px 25px rgba(212, 175, 55, 0.1); }
+.card-list-img-wrap {
+  width: 76px; height: 76px; border-radius: 10px; overflow: hidden;
+  background: var(--bg-3); flex-shrink: 0; position: relative;
+}
+.card-list-img { width: 100%; height: 100%; object-fit: cover; opacity: 0; transition: opacity 0.4s; }
+.card-list-img.loaded { opacity: 1; }
+.card-list .item-info { flex: 1; min-width: 0; }
+.card-list .item-name { text-align: right; margin-bottom: 4px; font-size: 1em; -webkit-line-clamp: 1; }
+.card-list .item-price { font-size: 0.95em; padding: 3px 12px; align-self: flex-start; }
+.card-list .item-prep { justify-content: flex-start; margin-bottom: 6px; font-size: 0.7em; }
+
+/* ============ EMPTY STATE ============ */
+.empty-state { text-align: center; padding: 80px 20px; color: var(--text-muted); }
+.empty-icon {
+  display: inline-flex; align-items: center; justify-content: center;
+  width: 90px; height: 90px; border-radius: 50%;
+  background: var(--card-bg); border: 1px solid var(--border); margin-bottom: 20px;
+}
+.empty-icon i { font-size: 40px; color: var(--gold); opacity: 0.5; }
+.empty-state h3 { font-family: 'Amiri', serif; font-size: 1.4em; color: var(--gold); margin-bottom: 8px; }
+.empty-state p { font-size: 0.95em; opacity: 0.7; }
+
+/* ============ SKELETON ============ */
+.skeleton-card { background: var(--card-bg); border-radius: 14px; overflow: hidden; border: 1px solid var(--border); }
+.skeleton-img { aspect-ratio: 4/3; background: linear-gradient(90deg, var(--bg-3) 25%, var(--card-bg) 50%, var(--bg-3) 75%); background-size: 200% 100%; animation: shimmer 1.5s infinite; }
+.skeleton-text { height: 14px; margin: 12px 14px; border-radius: 4px; background: linear-gradient(90deg, var(--bg-3) 25%, var(--card-bg) 50%, var(--bg-3) 75%); background-size: 200% 100%; animation: shimmer 1.5s infinite; width: 70%; }
+.skeleton-text.short { width: 40%; margin-bottom: 16px; }
+
+/* ============ FLOATING BUTTONS ============ */
+.floating-actions {
+  position: fixed; bottom: 20px; left: 20px;
+  display: flex; flex-direction: column; gap: 12px; z-index: 200;
+}
+.fab {
+  width: 54px; height: 54px; border-radius: 50%; border: none;
+  display: flex; align-items: center; justify-content: center;
+  cursor: pointer; text-decoration: none;
+  box-shadow: 0 8px 24px rgba(0,0,0,0.35);
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  position: relative;
+}
+.fab:hover { transform: translateY(-4px) scale(1.08); }
+.fab i { font-size: 26px; color: #fff; }
+.fab.whatsapp { background: #25D366; }
+.fab.whatsapp:hover { box-shadow: 0 12px 30px rgba(37, 211, 102, 0.5); }
+.fab.phone { background: var(--gold); }
+.fab.phone i { color: #0A0A0A; }
+.fab.phone:hover { box-shadow: 0 12px 30px rgba(212, 175, 55, 0.5); }
+.fab-tooltip {
+  position: absolute; left: calc(100% + 8px); top: 50%; transform: translateY(-50%);
+  background: rgba(0,0,0,0.85); color: #fff; padding: 6px 12px; border-radius: 8px;
+  font-size: 12px; font-weight: 700; white-space: nowrap; opacity: 0; pointer-events: none;
+  transition: opacity 0.3s; backdrop-filter: blur(10px);
+}
+.fab:hover .fab-tooltip { opacity: 1; }
+
+/* ============ ANIMATIONS ============ */
+@keyframes shimmer { 0% { background-position: 200% 0; } 100% { background-position: -200% 0; } }
+@keyframes rotateSlow { to { transform: rotate(360deg); } }
+@keyframes fadeInUp {
+  from { opacity: 0; transform: translateY(12px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* ============ RESPONSIVE ============ */
+@media (max-width: 400px) {
+  .hero h1 { font-size: 2.2em; }
+  .hero h2 { font-size: 0.7em; letter-spacing: 6px; }
+  .category-title { font-size: 1.7em; }
+  .category-icon-big { width: 78px; height: 78px; }
+  .category-icon-big i { font-size: 30px; }
+  .fab { width: 48px; height: 48px; }
+  .fab i { font-size: 22px; }
+}
+</style>
+</head>
+<body>
+
+<header class="hero" id="heroSection">
+  <div class="hero-logo" id="logoContainer">الباشا</div>
+  <h1 id="restaurantName">بيت الباشا</h1>
+  <h2>BEIT AL BASHA</h2>
+  <p id="restaurantSubtitle">حيث تلتقي نكهة الضيافة بأجواء الراحة</p>
+  <div class="status-badge" id="statusBadge" hidden>
+    <span class="status-dot"></span>
+    <span id="statusText">مفتوح الآن</span>
+  </div>
+</header>
+
+<div class="nav-wrapper">
+  <nav class="nav-categories" id="nav"></nav>
+</div>
+
+<main class="menu-container" id="menu">
+  <div class="menu-grid" id="skeletonGrid">
+    <div class="skeleton-card"><div class="skeleton-img"></div><div class="skeleton-text"></div><div class="skeleton-text short"></div></div>
+    <div class="skeleton-card"><div class="skeleton-img"></div><div class="skeleton-text"></div><div class="skeleton-text short"></div></div>
+    <div class="skeleton-card"><div class="skeleton-img"></div><div class="skeleton-text"></div><div class="skeleton-text short"></div></div>
+    <div class="skeleton-card"><div class="skeleton-img"></div><div class="skeleton-text"></div><div class="skeleton-text short"></div></div>
+  </div>
+</main>
+
+<div class="floating-actions" id="floatingActions"></div>
+
+<script type="module">
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+  import { getFirestore, doc, onSnapshot } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+
+  const firebaseConfig = {
+    apiKey: "AIzaSyAE0-gK_eWE5cRxkX-j22zoOYfMSZfNLKk",
+    authDomain: "biet-albasha.firebaseapp.com",
+    projectId: "biet-albasha",
+    storageBucket: "biet-albasha.firebasestorage.app",
+    messagingSenderId: "349931331130",
+    appId: "1:349931331130:web:1562743baa3f76a9d51f03"
+  };
+
+  const app = initializeApp(firebaseConfig);
+  const db = getFirestore(app);
+
+  const $ = id => document.getElementById(id);
+  const fmt = n => Number(n || 0).toLocaleString('en-US');
+
+  // 🎯 أيقونات FontAwesome الاحترافية والواضحة جداً
+  const icons = {
+    "المشروبات الساخنة": "fa-mug-hot",
+    "الأراكيل": "fa-smoking",
+    "مشاوي": "fa-drumstick-bite",
+    "الشاورما": "fa-bowl-food",
+    "السندويش والبرغر": "fa-hamburger",
+    "الوجبات": "fa-utensils",
+    "بيتزا وفطائر": "fa-pizza-slice",
+    "مقبلات باردة": "fa-leaf",
+    "وجبات ساخنة": "fa-plate-wheat",
+    "مقبلات ساخنة": "fa-fire",
+    "فتات": "fa-bowl-rice",
+    "فرابتشينو وعصائر": "fa-blender",
+    "فريتشينو وعصائر": "fa-blender",
+    "كوكتيلات ومشروبات باردة": "fa-martini-glass-citrus"
+  };
+  const defaultIcon = "fa-bowl-food";
+
+  let allItems = [];
+  let settings = {
+    theme: "royal", menuLayout: "grid", logoType: "svg", logoUrl: "",
+    categoryOrder: [], showHero: true, showPopular: false, showOffers: false,
+    showPrepTime: false, showCallButton: true, showWhatsapp: true, showStatus: true,
+    name: "بيت الباشا",
+    subtitle: "حيث تلتقي نكهة الضيافة بأجواء الراحة", status: "", statusType: "open",
+    heroImage: "", whatsapp: "", whatsappDisplay: "", phone: "", phoneDisplay: ""
+  };
+
+  // ============ 1. SETTINGS ============
+  onSnapshot(doc(db, "settings", "info"), snap => {
+    if (snap.exists()) {
+      settings = { ...settings, ...snap.data() };
+      if (typeof settings.showHero === "undefined") settings.showHero = true;
+      if (typeof settings.showCallButton === "undefined") settings.showCallButton = true;
+      if (typeof settings.showWhatsapp === "undefined") settings.showWhatsapp = true;
+      if (typeof settings.showStatus === "undefined") settings.showStatus = true;
+
+      document.documentElement.setAttribute("data-theme", settings.theme || "royal");
+
+      // Name + subtitle
+      if (settings.name) $("restaurantName").textContent = settings.name;
+      if (settings.subtitle) $("restaurantSubtitle").textContent = settings.subtitle;
+
+      // Status badge
+      const badge = $("statusBadge");
+      if (settings.showStatus && settings.status && settings.status.trim()) {
+        $("statusText").textContent = settings.status;
+        badge.hidden = false;
+        badge.className = "status-badge " + (settings.statusType || "open");
+      } else {
+        badge.hidden = true;
+      }
+
+      // Hero show/hide + image
+      const hero = $("heroSection");
+      if (settings.showHero === false) hero.classList.add("hidden");
+      else {
+        hero.classList.remove("hidden");
+        if (settings.heroImage) {
+          hero.classList.add("has-image");
+          hero.style.backgroundImage = `url(${settings.heroImage})`;
+        } else {
+          hero.classList.remove("has-image");
+          hero.style.backgroundImage = "";
+        }
+      }
+
+      // Logo
+      const logoBox = $("logoContainer");
+      if (settings.logoType === "image" && settings.logoUrl) {
+        logoBox.className = "hero-logo";
+        logoBox.innerHTML = `<img src="${settings.logoUrl}" alt="Logo" onerror="this.parentElement.textContent='${(settings.name || 'الباشا').split(' ')[0]}'">`;
+      } else if (settings.logoType === "text-red") {
+        logoBox.className = "hero-logo text-red";
+        logoBox.textContent = (settings.name || "الباشا").split(' ')[0] || "الباشا";
+      } else {
+        logoBox.className = "hero-logo";
+        logoBox.textContent = (settings.name || "الباشا").split(' ')[0] || "الباشا";
+      }
+
+      // Floating actions
+      renderFloatingActions();
+    }
+  });
+
+  // ============ 2. MENU ============
+  onSnapshot(doc(db, "menu", "all"), snap => {
+    allItems = snap.exists() && Array.isArray(snap.data().items) ? snap.data().items : [];
+    renderMenu();
+  });
+
+  // ============ 3. RENDER MENU ============
+  function renderMenu() {
+    const nav = $("nav"), menu = $("menu");
+    if (allItems.length === 0) {
+      menu.innerHTML = `<div class="empty-state">
+        <div class="empty-icon"><i class="fa-solid fa-utensils"></i></div>
+        <h3>لا توجد أصناف حالياً</h3>
+        <p>سيتم إضافة الأصناف قريباً</p>
+      </div>`;
+      nav.innerHTML = "";
+      return;
+    }
+
+    // Group by category
+    const grouped = {};
+    allItems.forEach(item => {
+      const cat = item.category || "أخرى";
+      if (!grouped[cat]) grouped[cat] = [];
+      grouped[cat].push(item);
+    });
+
+    // Popular & Offers
+    const popularItems = allItems.filter(i => i.isPopular);
+    const offerItems = allItems.filter(i => i.isOffer && i.offerPrice && Number(i.offerPrice) < Number(i.price));
+    const showPopular = settings.showPopular && popularItems.length > 0;
+    const showOffers = settings.showOffers && offerItems.length > 0;
+
+    // Category order
+    const order = Array.isArray(settings.categoryOrder) ? settings.categoryOrder : [];
+    const inOrder = order.filter(c => grouped[c]);
+    const notInOrder = Object.keys(grouped).filter(c => !order.includes(c)).sort((a, b) => a.localeCompare(b, 'ar'));
+    const finalCats = [...inOrder, ...notInOrder];
+
+    nav.innerHTML = "";
+    menu.innerHTML = "";
+
+    const layout = settings.menuLayout || "grid";
+    const layoutClass = layout === "list" ? "menu-list" : (layout === "sections" ? "menu-sections" : "menu-grid");
+
+    // --- Popular section nav
+    if (showPopular) {
+      nav.innerHTML += `<a href="#popular-section" class="nav-item special">
+        <i class="fa-solid fa-star"></i>
+        <span class="nav-label">الأكثر طلباً</span>
+      </a>`;
+    }
+    // --- Offers section nav
+    if (showOffers) {
+      nav.innerHTML += `<a href="#offers-section" class="nav-item special-offer">
+        <i class="fa-solid fa-fire"></i>
+        <span class="nav-label">عروض اليوم</span>
+      </a>`;
+    }
+    // --- Categories nav
+    finalCats.forEach((cat, index) => {
+      const iconName = icons[cat] || defaultIcon;
+      nav.innerHTML += `<a href="#cat-${index}" class="nav-item">
+        <i class="fa-solid ${iconName}"></i>
+        <span class="nav-label">${cat}</span>
+      </a>`;
+    });
+
+    // --- Popular section
+    if (showPopular) {
+      menu.innerHTML += buildSpecialSection("popular-section", "الأكثر طلباً", "fa-star", popularItems, layoutClass, "special-section");
+    }
+    // --- Offers section
+    if (showOffers) {
+      menu.innerHTML += buildSpecialSection("offers-section", "عروض اليوم", "fa-fire", offerItems, layoutClass, "special-section offers");
+    }
+    // --- Regular categories
+    finalCats.forEach((cat, index) => {
+      const iconName = icons[cat] || defaultIcon;
+      const itemsHtml = buildItemsHtml(grouped[cat], layoutClass);
+      menu.innerHTML += `<section class="category-section" id="cat-${index}">
+        <div class="category-header">
+          <div class="category-icon-big"><i class="fa-solid ${iconName}"></i></div>
+          <h2 class="category-title">${cat}</h2>
+          <div class="category-line"><span class="dot"></span></div>
+        </div>
+        ${itemsHtml}
+      </section>`;
+    });
+
+    attachImageHandlers();
+    setupScrollSpy();
+  }
+
+  // ============ 4. BUILD SPECIAL SECTION ============
+  function buildSpecialSection(id, title, iconName, items, layoutClass, extraClass) {
+    const itemsHtml = buildItemsHtml(items, layoutClass);
+    return `<section class="category-section ${extraClass}" id="${id}">
+      <div class="category-header">
+        <div class="category-icon-big"><i class="fa-solid ${iconName}"></i></div>
+        <h2 class="category-title">${title}</h2>
+        <div class="category-line"><span class="dot"></span></div>
+      </div>
+      ${itemsHtml}
+    </section>`;
+  }
+
+  // ============ 5. BUILD ITEMS HTML ============
+  function buildItemsHtml(items, layoutClass) {
+    const layout = settings.menuLayout || "grid";
+    const showPrep = settings.showPrepTime === true;
+
+    if (layout === "list") {
+      return `<div class="menu-list">${items.map(item => {
+        const isOffer = item.isOffer && item.offerPrice && Number(item.offerPrice) < Number(item.price);
+        return `<div class="card-list">
+          <div class="card-list-img-wrap">
+            ${item.imageUrl ? `<img src="${item.imageUrl}" class="card-list-img" loading="lazy" decoding="async" onload="this.classList.add('loaded')" onerror="this.style.display='none'">` : ""}
+          </div>
+          <div class="item-info">
+            <div class="item-name">${item.name}</div>
+            ${showPrep && item.prepTime > 0 ? `<div class="item-prep"><i class="fa-regular fa-clock"></i> ${item.prepTime} دقيقة</div>` : ""}
+            <div class="item-price">
+              ${isOffer ? `<span class="old">${fmt(item.price)}</span>` : ""}
+              ${fmt(isOffer ? item.offerPrice : item.price)} <span class="currency">ل.س</span>
+            </div>
+          </div>
+        </div>`;
+      }).join("")}</div>`;
+    }
+
+    return `<div class="${layoutClass}">${items.map(item => {
+      const isOffer = item.isOffer && item.offerPrice && Number(item.offerPrice) < Number(item.price);
+      const badges = [];
+      if (item.isPopular) badges.push(`<span class="item-badge popular"><i class="fa-solid fa-star"></i> الأكثر طلباً</span>`);
+      if (isOffer) badges.push(`<span class="item-badge offer"><i class="fa-solid fa-fire"></i> خصم</span>`);
+      return `<div class="item-card">
+        ${badges.length ? `<div class="item-badges">${badges.join("")}</div>` : ""}
+        <div class="item-img-wrap">
+          <div class="img-fallback"><i class="fa-solid fa-utensils"></i></div>
+          ${item.imageUrl ? `<img src="${item.imageUrl}" class="item-img" alt="${item.name}" loading="lazy" decoding="async" onload="this.classList.add('loaded')" onerror="this.style.display='none'">` : ""}
+        </div>
+        <div class="item-content">
+          <div class="item-name">${item.name}</div>
+          ${showPrep && item.prepTime > 0 ? `<div class="item-prep"><i class="fa-regular fa-clock"></i> ${item.prepTime} دقيقة</div>` : ""}
+          <div class="item-price">
+            ${isOffer ? `<span class="old">${fmt(item.price)}</span>` : ""}
+            ${fmt(isOffer ? item.offerPrice : item.price)} <span class="currency">ل.س</span>
+          </div>
+        </div>
+      </div>`;
+    }).join("")}</div>`;
+  }
+
+  // ============ 6. IMAGE HANDLERS ============
+  function attachImageHandlers() {
+    document.querySelectorAll('.item-img').forEach(img => {
+      if (img.complete && img.naturalHeight !== 0) img.classList.add('loaded');
+    });
+  }
+
+  // ============ 7. SCROLL SPY ============
+  function setupScrollSpy() {
+    const sections = document.querySelectorAll('.category-section');
+    const navItems = document.querySelectorAll('.nav-item');
+
+    const onScroll = () => {
+      const navHeight = (document.querySelector('.nav-wrapper')?.offsetHeight || 80) + 40;
+      let current = '';
+      sections.forEach(section => {
+        if (window.scrollY >= section.offsetTop - navHeight) current = section.id;
+      });
+      navItems.forEach(item => {
+        item.classList.toggle('active', item.getAttribute('href') === `#${current}`);
+      });
+    };
+    window.removeEventListener('scroll', onScroll);
+    window.addEventListener('scroll', onScroll, { passive: true });
+    onScroll();
+  }
+
+  // ============ 8. FLOATING CONTACT BUTTONS ============
+  function renderFloatingActions() {
+    const container = $("floatingActions");
+    let html = "";
+    const whatsapp = settings.whatsapp || "";
+    const phone = settings.phone || "";
+
+    if (settings.showWhatsapp && whatsapp) {
+      html += `<a class="fab whatsapp" href="https://wa.me/${whatsapp}" target="_blank" rel="noopener" aria-label="واتساب">
+        <i class="fa-brands fa-whatsapp"></i>
+        <span class="fab-tooltip">واتساب</span>
+      </a>`;
+    }
+    if (settings.showCallButton && phone) {
+      html += `<a class="fab phone" href="tel:${phone}" aria-label="اتصل">
+        <i class="fa-solid fa-phone"></i>
+        <span class="fab-tooltip">اتصل مباشرة</span>
+      </a>`;
+    }
+    container.innerHTML = html;
+  }
+</script>
+</body>
+</html>
