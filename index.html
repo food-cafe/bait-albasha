@@ -15,16 +15,43 @@
   --bg-main: #0a0a0a; --card-bg: #141414; --gold: #D4AF37; --gold-light: #F3E5AB;
   --text-main: #FDFBF7; --text-muted: #888; --border: rgba(212, 175, 55, 0.15);
   --bg-3: #1A1A1A; --nav-bg: rgba(10, 10, 10, 0.88);
+  --status-open: #25D366; --status-orders: #F59E0B; --status-closed: #E10600;
+  --hero-overlay: linear-gradient(to bottom, rgba(10,10,10,0.4), rgba(10,10,10,0.85));
 }
 [data-theme="white-gold"] {
   --bg-main: #F8F9FA; --card-bg: #FFFFFF; --gold: #C9A227; --gold-light: #D4AF37;
   --text-main: #1A1A1A; --text-muted: #555; --border: rgba(201, 162, 39, 0.2);
-  --bg-3: #F1F3F5; --nav-bg: rgba(255, 255, 255, 0.88);
+  --bg-3: #F1F3F5; --nav-bg: rgba(255, 255, 255, 0.92);
+  --status-open: #25D366; --status-orders: #F59E0B; --status-closed: #E10600;
+  --hero-overlay: linear-gradient(to bottom, rgba(248,249,250,0.5), rgba(248,249,250,0.95));
 }
 [data-theme="dark-red"] {
   --bg-main: #0a0a0a; --card-bg: #141414; --gold: #E10600; --gold-light: #FF4D4D;
   --text-main: #F5F5F5; --text-muted: #A0A0A0; --border: rgba(225, 6, 0, 0.15);
   --bg-3: #1A1A1A; --nav-bg: rgba(10, 10, 10, 0.88);
+  --status-open: #25D366; --status-orders: #F59E0B; --status-closed: #E10600;
+  --hero-overlay: linear-gradient(to bottom, rgba(10,10,10,0.4), rgba(10,10,10,0.85));
+}
+[data-theme="white-red"] {
+  --bg-main: #FFFFFF; --card-bg: #FFFFFF; --gold: #E10600; --gold-light: #FF4D4D;
+  --text-main: #1A1A1A; --text-muted: #555; --border: rgba(225, 6, 0, 0.15);
+  --bg-3: #F8F9FA; --nav-bg: rgba(255, 255, 255, 0.92);
+  --status-open: #25D366; --status-orders: #F59E0B; --status-closed: #E10600;
+  --hero-overlay: linear-gradient(to bottom, rgba(255,255,255,0.5), rgba(255,255,255,0.95));
+}
+[data-theme="classic"] {
+  --bg-main: #0B0B0F; --card-bg: #1A1A24; --gold: #D4AF37; --gold-light: #E5C158;
+  --text-main: #F5F5F5; --text-muted: #A0A0B0; --border: rgba(212, 175, 55, 0.2);
+  --bg-3: #16161D; --nav-bg: rgba(11, 11, 15, 0.88);
+  --status-open: #25D366; --status-orders: #F59E0B; --status-closed: #1E3A8A;
+  --hero-overlay: linear-gradient(to bottom, rgba(11,11,15,0.4), rgba(11,11,15,0.85));
+}
+[data-theme="midnight"] {
+  --bg-main: #0A1628; --card-bg: #152545; --gold: #C9A961; --gold-light: #DBC07D;
+  --text-main: #FFFFFF; --text-muted: #A0B0D0; --border: rgba(201, 169, 97, 0.25);
+  --bg-3: #0F1E35; --nav-bg: rgba(10, 22, 40, 0.88);
+  --status-open: #25D366; --status-orders: #F59E0B; --status-closed: #E10600;
+  --hero-overlay: linear-gradient(to bottom, rgba(10,22,40,0.4), rgba(10,22,40,0.85));
 }
 
 /* ============ BASE ============ */
@@ -33,11 +60,10 @@ html { scroll-behavior: smooth; -webkit-tap-highlight-color: transparent; }
 body {
   font-family: 'Tajawal', sans-serif; background-color: var(--bg-main); color: var(--text-main);
   line-height: 1.6; background-image: radial-gradient(circle at top, rgba(255,255,255,0.03) 0%, transparent 70%);
-  background-attachment: fixed; padding-bottom: 60px; -webkit-font-smoothing: antialiased;
+  background-attachment: fixed; padding-bottom: 80px; -webkit-font-smoothing: antialiased;
   transition: background 0.4s, color 0.4s; min-height: 100vh;
 }
 
-/* Material Symbols base */
 .material-symbols-rounded {
   font-family: 'Material Symbols Rounded';
   font-weight: normal; font-style: normal;
@@ -57,8 +83,14 @@ body {
   border-bottom: 1px solid var(--border); position: relative;
   overflow: hidden;
 }
-.hero::before {
-  content: ''; position: absolute; top: -50%; left: 50%;
+.hero.has-image {
+  background-size: cover; background-position: center; background-repeat: no-repeat;
+}
+.hero.has-image::before {
+  content: ''; position: absolute; inset: 0; background: var(--hero-overlay); z-index: 0;
+}
+.hero::after {
+  content: ''; position: absolute; top: -30%; left: 50%;
   transform: translateX(-50%);
   width: 500px; height: 500px;
   background: radial-gradient(circle, rgba(212, 175, 55, 0.08) 0%, transparent 70%);
@@ -80,6 +112,7 @@ body {
   box-shadow: 0 0 0 8px rgba(212, 175, 55, 0.1), 0 0 80px rgba(212, 175, 55, 0.3);
 }
 .hero-logo img { width: 100%; height: 100%; object-fit: contain; border-radius: 50%; }
+.hero-logo.text-red { color: #E10600; }
 .hero h1 {
   font-family: 'Amiri', serif; font-size: 2.6em; font-weight: 700;
   color: var(--gold); margin-bottom: 6px; letter-spacing: 0.5px;
@@ -90,27 +123,27 @@ body {
 }
 .hero p {
   font-size: 1.05em; color: var(--text-main);
-  max-width: 420px; margin: 0 auto; opacity: 0.75; font-weight: 300;
+  max-width: 420px; margin: 0 auto; opacity: 0.8; font-weight: 300;
 }
 
 /* ============ STATUS BADGE ============ */
 .status-badge {
   display: inline-flex; align-items: center; gap: 8px;
   padding: 7px 18px;
-  background: rgba(37, 211, 102, 0.1);
-  border: 1px solid rgba(37, 211, 102, 0.3);
-  border-radius: 22px;
-  font-size: 13px; font-weight: 700; color: #25D366;
-  margin-top: 18px;
+  border-radius: 22px; font-size: 13px; font-weight: 700;
+  margin-top: 18px; transition: all 0.3s;
 }
 .status-badge[hidden] { display: none; }
+.status-badge.open { background: rgba(37, 211, 102, 0.12); border: 1px solid rgba(37, 211, 102, 0.35); color: var(--status-open); }
+.status-badge.orders { background: rgba(245, 158, 11, 0.12); border: 1px solid rgba(245, 158, 11, 0.35); color: var(--status-orders); }
+.status-badge.closed { background: rgba(225, 6, 0, 0.12); border: 1px solid rgba(225, 6, 0, 0.35); color: var(--status-closed); }
 .status-dot {
-  width: 8px; height: 8px; border-radius: 50%; background: #25D366;
+  width: 8px; height: 8px; border-radius: 50%; background: currentColor;
   animation: pulse 2s infinite; flex-shrink: 0;
 }
 @keyframes pulse {
-  0%, 100% { box-shadow: 0 0 0 0 rgba(37, 211, 102, 0.5); }
-  50% { box-shadow: 0 0 0 8px rgba(37, 211, 102, 0); }
+  0%, 100% { box-shadow: 0 0 0 0 currentColor; opacity: 1; }
+  50% { box-shadow: 0 0 0 8px transparent; opacity: 0.7; }
 }
 
 /* ============ NAV ============ */
@@ -122,8 +155,7 @@ body {
 .nav-categories {
   display: flex; gap: 10px; overflow-x: auto;
   scrollbar-width: none; -webkit-overflow-scrolling: touch;
-  scroll-snap-type: x proximity; padding: 0 18px;
-  max-width: 1200px; margin: 0 auto;
+  padding: 0 18px; max-width: 1200px; margin: 0 auto;
 }
 .nav-categories::-webkit-scrollbar { display: none; }
 .nav-item {
@@ -132,7 +164,7 @@ body {
   background: var(--card-bg); border: 1px solid var(--border);
   text-decoration: none; color: var(--text-muted);
   transition: all 0.35s cubic-bezier(0.4, 0, 0.2, 1);
-  box-shadow: 0 3px 12px rgba(0,0,0,0.25); scroll-snap-align: start; flex-shrink: 0;
+  box-shadow: 0 3px 12px rgba(0,0,0,0.25); flex-shrink: 0;
 }
 .nav-item .material-symbols-rounded {
   font-size: 26px; color: var(--gold); margin-bottom: 6px;
@@ -147,6 +179,8 @@ body {
 .nav-item:hover .material-symbols-rounded, .nav-item.active .material-symbols-rounded {
   transform: scale(1.15);
 }
+.nav-item.special .material-symbols-rounded { color: #FFC107; }
+.nav-item.special-offer .material-symbols-rounded { color: #FF5252; }
 
 /* ============ MENU CONTAINER ============ */
 .menu-container { max-width: 1100px; margin: 0 auto; padding: 40px 18px; }
@@ -200,6 +234,32 @@ body {
   box-shadow: 0 0 12px var(--gold);
 }
 
+/* ============ SPECIAL SECTIONS (Popular/Offers) ============ */
+.special-section { position: relative; }
+.special-section .category-icon-big {
+  background: radial-gradient(circle at 30% 30%, rgba(255, 193, 7, 0.2), var(--card-bg) 75%);
+  border-color: #FFC107;
+}
+.special-section .category-icon-big::before { border-color: #FFC107; }
+.special-section .category-icon-big .material-symbols-rounded { color: #FFC107; }
+.special-section .category-title { color: #FFC107; }
+.special-section .category-line::before, .special-section .category-line::after {
+  background: linear-gradient(90deg, transparent, #FFC107, transparent);
+}
+.special-section .category-line .dot { background: #FFC107; box-shadow: 0 0 12px #FFC107; }
+
+.special-section.offers .category-icon-big {
+  background: radial-gradient(circle at 30% 30%, rgba(255, 82, 82, 0.2), var(--card-bg) 75%);
+  border-color: #FF5252;
+}
+.special-section.offers .category-icon-big::before { border-color: #FF5252; }
+.special-section.offers .category-icon-big .material-symbols-rounded { color: #FF5252; }
+.special-section.offers .category-title { color: #FF5252; }
+.special-section.offers .category-line::before, .special-section.offers .category-line::after {
+  background: linear-gradient(90deg, transparent, #FF5252, transparent);
+}
+.special-section.offers .category-line .dot { background: #FF5252; box-shadow: 0 0 12px #FF5252; }
+
 /* ============ LAYOUTS ============ */
 .menu-grid {
   display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px;
@@ -214,13 +274,13 @@ body {
 }
 @media (min-width: 768px) { .menu-sections { grid-template-columns: repeat(2, 1fr); gap: 24px; } }
 
-/* ============ CARDS (Grid & Sections) ============ */
+/* ============ ITEM CARDS ============ */
 .item-card {
   background: var(--card-bg); border: 1px solid var(--border); border-radius: 14px;
   overflow: hidden; display: flex; flex-direction: column;
   transition: transform 0.35s ease, box-shadow 0.35s ease, border-color 0.35s ease;
   box-shadow: 0 8px 22px rgba(0,0,0,0.4);
-  animation: fadeInUp 0.4s ease both;
+  animation: fadeInUp 0.4s ease both; position: relative;
 }
 .item-card:active { transform: scale(0.98); }
 @media (hover: hover) {
@@ -230,6 +290,16 @@ body {
   }
   .item-card:hover .item-img { transform: scale(1.06); }
 }
+.item-badges {
+  position: absolute; top: 8px; right: 8px; display: flex; gap: 4px; z-index: 3; flex-wrap: wrap;
+}
+.item-badge {
+  font-size: 10px; padding: 3px 8px; border-radius: 8px; font-weight: 800;
+  color: #fff; backdrop-filter: blur(10px); box-shadow: 0 2px 8px rgba(0,0,0,0.3);
+}
+.item-badge.popular { background: linear-gradient(135deg, #FFC107, #FFA000); }
+.item-badge.offer { background: linear-gradient(135deg, #FF5252, #D32F2F); }
+
 .item-img-wrap {
   position: relative; width: 100%; aspect-ratio: 4/3; overflow: hidden;
   background: linear-gradient(135deg, var(--bg-3), var(--card-bg));
@@ -250,22 +320,33 @@ body {
 }
 .item-name {
   font-size: 1em; font-weight: 700; color: var(--text-main);
-  margin-bottom: 12px; line-height: 1.35;
+  margin-bottom: 6px; line-height: 1.35;
   overflow: hidden; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical;
 }
+.item-prep {
+  font-size: 0.72em; color: var(--text-muted);
+  display: inline-flex; align-items: center; gap: 4px; justify-content: center;
+  margin-bottom: 8px;
+}
+.item-prep .material-symbols-rounded { font-size: 14px; }
 .item-price {
   font-size: 1.05em; font-weight: 900; color: var(--gold);
   margin-top: auto; background: rgba(212, 175, 55, 0.08);
   padding: 5px 16px; border-radius: 20px;
-  display: inline-block; align-self: center;
+  display: inline-flex; align-items: center; gap: 8px; justify-content: center;
+  align-self: center;
   border: 1px solid rgba(212, 175, 55, 0.22);
-  font-family: 'Tajawal', sans-serif;
+  font-family: 'Tajawal', sans-serif; flex-wrap: wrap;
 }
-.item-price span { font-size: 0.8em; font-weight: 500; opacity: 0.85; }
+.item-price .old {
+  font-size: 0.75em; color: var(--text-muted); text-decoration: line-through;
+  font-weight: 500; opacity: 0.75;
+}
+.item-price span.currency { font-size: 0.8em; font-weight: 500; opacity: 0.85; }
 
 /* Sections layout — larger cards */
 .menu-sections .item-card .item-img-wrap { aspect-ratio: 16/10; }
-.menu-sections .item-card .item-name { font-size: 1.15em; margin-bottom: 14px; }
+.menu-sections .item-card .item-name { font-size: 1.15em; margin-bottom: 8px; }
 .menu-sections .item-card .item-price { font-size: 1.15em; padding: 7px 20px; }
 .menu-sections .item-card .item-content { padding: 18px; }
 
@@ -283,21 +364,16 @@ body {
 .card-list-img { width: 100%; height: 100%; object-fit: cover; opacity: 0; transition: opacity 0.4s; }
 .card-list-img.loaded { opacity: 1; }
 .card-list .item-info { flex: 1; min-width: 0; }
-.card-list .item-name {
-  text-align: right; margin-bottom: 6px; font-size: 1em;
-  -webkit-line-clamp: 1;
-}
-.card-list .item-price {
-  font-size: 0.95em; padding: 3px 12px; align-self: flex-start;
-}
+.card-list .item-name { text-align: right; margin-bottom: 4px; font-size: 1em; -webkit-line-clamp: 1; }
+.card-list .item-price { font-size: 0.95em; padding: 3px 12px; align-self: flex-start; }
+.card-list .item-prep { justify-content: flex-start; margin-bottom: 6px; font-size: 0.7em; }
 
 /* ============ EMPTY STATE ============ */
 .empty-state { text-align: center; padding: 80px 20px; color: var(--text-muted); }
 .empty-icon {
   display: inline-flex; align-items: center; justify-content: center;
   width: 90px; height: 90px; border-radius: 50%;
-  background: var(--card-bg); border: 1px solid var(--border);
-  margin-bottom: 20px;
+  background: var(--card-bg); border: 1px solid var(--border); margin-bottom: 20px;
 }
 .empty-icon .material-symbols-rounded { font-size: 44px; color: var(--gold); opacity: 0.5; }
 .empty-state h3 { font-family: 'Amiri', serif; font-size: 1.4em; color: var(--gold); margin-bottom: 8px; }
@@ -309,20 +385,33 @@ body {
 .skeleton-text { height: 14px; margin: 12px 14px; border-radius: 4px; background: linear-gradient(90deg, var(--bg-3) 25%, var(--card-bg) 50%, var(--bg-3) 75%); background-size: 200% 100%; animation: shimmer 1.5s infinite; width: 70%; }
 .skeleton-text.short { width: 40%; margin-bottom: 16px; }
 
-/* ============ BACK TO TOP ============ */
-.back-to-top {
-  position: fixed; bottom: 22px; left: 22px;
-  width: 46px; height: 46px; border-radius: 50%;
-  background: var(--gold); color: var(--bg-main); border: none;
-  display: flex; align-items: center; justify-content: center;
-  cursor: pointer; z-index: 200;
-  box-shadow: 0 8px 24px rgba(212, 175, 55, 0.4);
-  opacity: 0; visibility: hidden; transform: translateY(20px);
-  transition: all 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+/* ============ FLOATING BUTTONS ============ */
+.floating-actions {
+  position: fixed; bottom: 20px; left: 20px;
+  display: flex; flex-direction: column; gap: 12px; z-index: 200;
 }
-.back-to-top.show { opacity: 1; visibility: visible; transform: translateY(0); }
-.back-to-top:hover { transform: translateY(-4px); box-shadow: 0 12px 30px rgba(212, 175, 55, 0.5); }
-.back-to-top .material-symbols-rounded { font-size: 24px; }
+.fab {
+  width: 54px; height: 54px; border-radius: 50%; border: none;
+  display: flex; align-items: center; justify-content: center;
+  cursor: pointer; text-decoration: none;
+  box-shadow: 0 8px 24px rgba(0,0,0,0.35);
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  position: relative;
+}
+.fab:hover { transform: translateY(-4px) scale(1.08); }
+.fab .material-symbols-rounded { font-size: 26px; color: #fff; }
+.fab.whatsapp { background: #25D366; }
+.fab.whatsapp:hover { box-shadow: 0 12px 30px rgba(37, 211, 102, 0.5); }
+.fab.phone { background: var(--gold); }
+.fab.phone .material-symbols-rounded { color: #0A0A0A; }
+.fab.phone:hover { box-shadow: 0 12px 30px rgba(212, 175, 55, 0.5); }
+.fab-tooltip {
+  position: absolute; left: calc(100% + 8px); top: 50%; transform: translateY(-50%);
+  background: rgba(0,0,0,0.85); color: #fff; padding: 6px 12px; border-radius: 8px;
+  font-size: 12px; font-weight: 700; white-space: nowrap; opacity: 0; pointer-events: none;
+  transition: opacity 0.3s; backdrop-filter: blur(10px);
+}
+.fab:hover .fab-tooltip { opacity: 1; }
 
 /* ============ ANIMATIONS ============ */
 @keyframes shimmer { 0% { background-position: 200% 0; } 100% { background-position: -200% 0; } }
@@ -339,6 +428,8 @@ body {
   .category-title { font-size: 1.7em; }
   .category-icon-big { width: 78px; height: 78px; }
   .category-icon-big .material-symbols-rounded { font-size: 38px; }
+  .fab { width: 48px; height: 48px; }
+  .fab .material-symbols-rounded { font-size: 22px; }
 }
 </style>
 </head>
@@ -368,9 +459,7 @@ body {
   </div>
 </main>
 
-<button class="back-to-top" id="backToTop" aria-label="العودة للأعلى">
-  <span class="material-symbols-rounded">arrow_upward</span>
-</button>
+<div class="floating-actions" id="floatingActions"></div>
 
 <script type="module">
   import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
@@ -391,7 +480,7 @@ body {
   const $ = id => document.getElementById(id);
   const fmt = n => Number(n || 0).toLocaleString('en-US');
 
-  // 🎯 أيقونات Material Symbols احترافية لكل قسم
+  // 🎯 أيقونات Material Symbols
   const icons = {
     "المشروبات الساخنة": "local_cafe",
     "الأراكيل": "local_fire_department",
@@ -404,7 +493,8 @@ body {
     "وجبات ساخنة": "dinner_dining",
     "مقبلات ساخنة": "fastfood",
     "فتات": "ramen_dining",
-    "فريتشينو وعصائر": "local_drink",
+    "فرابتشينو وعصائر": "local_drink",
+    "فريتشينو وعصائر": "local_drink", // fallback for old spelling
     "كوكتيلات ومشروبات باردة": "local_bar"
   };
   const defaultIcon = "restaurant";
@@ -412,8 +502,10 @@ body {
   let allItems = [];
   let settings = {
     theme: "royal", menuLayout: "grid", logoType: "svg", logoUrl: "",
-    categoryOrder: [], showHero: true, name: "بيت الباشا",
-    subtitle: "حيث تلتقي نكهة الضيافة بأجواء الراحة", status: ""
+    categoryOrder: [], showHero: true, showPopular: false, showOffers: false,
+    showPrepTime: false, showCallButton: false, name: "بيت الباشا",
+    subtitle: "حيث تلتقي نكهة الضيافة بأجواء الراحة", status: "", statusType: "open",
+    heroImage: "", whatsapp: "", whatsappDisplay: "", phone: "", phoneDisplay: ""
   };
 
   // ============ 1. SETTINGS ============
@@ -423,40 +515,60 @@ body {
       if (typeof settings.showHero === "undefined") settings.showHero = true;
 
       document.documentElement.setAttribute("data-theme", settings.theme || "royal");
+
+      // Name + subtitle
       if (settings.name) $("restaurantName").textContent = settings.name;
       if (settings.subtitle) $("restaurantSubtitle").textContent = settings.subtitle;
 
       // Status badge
+      const badge = $("statusBadge");
       if (settings.status && settings.status.trim()) {
         $("statusText").textContent = settings.status;
-        $("statusBadge").hidden = false;
+        badge.hidden = false;
+        badge.className = "status-badge " + (settings.statusType || "open");
       } else {
-        $("statusBadge").hidden = true;
+        badge.hidden = true;
       }
 
-      // Hero show/hide
+      // Hero show/hide + image
       const hero = $("heroSection");
       if (settings.showHero === false) hero.classList.add("hidden");
-      else hero.classList.remove("hidden");
+      else {
+        hero.classList.remove("hidden");
+        if (settings.heroImage) {
+          hero.classList.add("has-image");
+          hero.style.backgroundImage = `url(${settings.heroImage})`;
+        } else {
+          hero.classList.remove("has-image");
+          hero.style.backgroundImage = "";
+        }
+      }
 
       // Logo
       const logoBox = $("logoContainer");
       if (settings.logoType === "image" && settings.logoUrl) {
-        logoBox.innerHTML = `<img src="${settings.logoUrl}" alt="Logo" onerror="this.parentElement.textContent='الباشا'">`;
+        logoBox.className = "hero-logo";
+        logoBox.innerHTML = `<img src="${settings.logoUrl}" alt="Logo" onerror="this.parentElement.textContent='${(settings.name || 'الباشا').split(' ')[0]}'">`;
+      } else if (settings.logoType === "text-red") {
+        logoBox.className = "hero-logo text-red";
+        logoBox.textContent = (settings.name || "الباشا").split(' ')[0] || "الباشا";
       } else {
-        logoBox.textContent = "الباشا";
+        logoBox.className = "hero-logo";
+        logoBox.textContent = (settings.name || "الباشا").split(' ')[0] || "الباشا";
       }
+
+      // Floating actions
+      renderFloatingActions();
     }
   });
 
   // ============ 2. MENU ============
   onSnapshot(doc(db, "menu", "all"), snap => {
-    if (snap.exists()) allItems = snap.data().items || [];
-    else allItems = [];
+    allItems = snap.exists() && Array.isArray(snap.data().items) ? snap.data().items : [];
     renderMenu();
   });
 
-  // ============ 3. RENDER ============
+  // ============ 3. RENDER MENU ============
   function renderMenu() {
     const nav = $("nav"), menu = $("menu");
     if (allItems.length === 0) {
@@ -477,12 +589,16 @@ body {
       grouped[cat].push(item);
     });
 
-    // Apply category order
+    // Popular & Offers
+    const popularItems = allItems.filter(i => i.isPopular);
+    const offerItems = allItems.filter(i => i.isOffer && i.offerPrice && Number(i.offerPrice) < Number(i.price));
+    const showPopular = settings.showPopular && popularItems.length > 0;
+    const showOffers = settings.showOffers && offerItems.length > 0;
+
+    // Category order
     const order = Array.isArray(settings.categoryOrder) ? settings.categoryOrder : [];
     const inOrder = order.filter(c => grouped[c]);
-    const notInOrder = Object.keys(grouped)
-      .filter(c => !order.includes(c))
-      .sort((a, b) => a.localeCompare(b, 'ar'));
+    const notInOrder = Object.keys(grouped).filter(c => !order.includes(c)).sort((a, b) => a.localeCompare(b, 'ar'));
     const finalCats = [...inOrder, ...notInOrder];
 
     nav.innerHTML = "";
@@ -491,48 +607,42 @@ body {
     const layout = settings.menuLayout || "grid";
     const layoutClass = layout === "list" ? "menu-list" : (layout === "sections" ? "menu-sections" : "menu-grid");
 
+    // --- Popular section nav
+    if (showPopular) {
+      nav.innerHTML += `<a href="#popular-section" class="nav-item special">
+        <span class="material-symbols-rounded">star</span>
+        <span class="nav-label">الأكثر طلباً</span>
+      </a>`;
+    }
+    // --- Offers section nav
+    if (showOffers) {
+      nav.innerHTML += `<a href="#offers-section" class="nav-item special-offer">
+        <span class="material-symbols-rounded">local_fire_department</span>
+        <span class="nav-label">عروض اليوم</span>
+      </a>`;
+    }
+    // --- Categories nav
     finalCats.forEach((cat, index) => {
-      const id = `cat-${index}`;
       const iconName = icons[cat] || defaultIcon;
-
-      // Nav item
-      nav.innerHTML += `<a href="#${id}" class="nav-item">
+      nav.innerHTML += `<a href="#cat-${index}" class="nav-item">
         <span class="material-symbols-rounded">${iconName}</span>
         <span class="nav-label">${cat}</span>
       </a>`;
+    });
 
-      // Items HTML based on layout
-      let itemsHtml = "";
-
-      if (layout === "list") {
-        itemsHtml = `<div class="menu-list">${grouped[cat].map(item => `
-          <div class="card-list">
-            <div class="card-list-img-wrap">
-              ${item.imageUrl ? `<img src="${item.imageUrl}" class="card-list-img" loading="lazy" decoding="async" onload="this.classList.add('loaded')" onerror="this.style.display='none'">` : ""}
-            </div>
-            <div class="item-info">
-              <div class="item-name">${item.name}</div>
-              <div class="item-price">${fmt(item.price)} <span>ل.س</span></div>
-            </div>
-          </div>
-        `).join("")}</div>`;
-      } else {
-        itemsHtml = `<div class="${layoutClass}">${grouped[cat].map(item => `
-          <div class="item-card">
-            <div class="item-img-wrap">
-              <div class="img-fallback"><span class="material-symbols-rounded">restaurant</span></div>
-              ${item.imageUrl ? `<img src="${item.imageUrl}" class="item-img" alt="${item.name}" loading="lazy" decoding="async" onload="this.classList.add('loaded')" onerror="this.style.display='none'">` : ""}
-            </div>
-            <div class="item-content">
-              <div class="item-name">${item.name}</div>
-              <div class="item-price">${fmt(item.price)} <span>ل.س</span></div>
-            </div>
-          </div>
-        `).join("")}</div>`;
-      }
-
-      // Category section
-      menu.innerHTML += `<section class="category-section" id="${id}">
+    // --- Popular section
+    if (showPopular) {
+      menu.innerHTML += buildSpecialSection("popular-section", "الأكثر طلباً", "star", popularItems, layoutClass, "special-section");
+    }
+    // --- Offers section
+    if (showOffers) {
+      menu.innerHTML += buildSpecialSection("offers-section", "عروض اليوم", "local_fire_department", offerItems, layoutClass, "special-section offers");
+    }
+    // --- Regular categories
+    finalCats.forEach((cat, index) => {
+      const iconName = icons[cat] || defaultIcon;
+      const itemsHtml = buildItemsHtml(grouped[cat], layoutClass);
+      menu.innerHTML += `<section class="category-section" id="cat-${index}">
         <div class="category-header">
           <div class="category-icon-big"><span class="material-symbols-rounded">${iconName}</span></div>
           <h2 class="category-title">${cat}</h2>
@@ -542,10 +652,78 @@ body {
       </section>`;
     });
 
+    attachImageHandlers();
     setupScrollSpy();
   }
 
-  // ============ 4. ACTIVE NAV ON SCROLL ============
+  // ============ 4. BUILD SPECIAL SECTION ============
+  function buildSpecialSection(id, title, iconName, items, layoutClass, extraClass) {
+    const itemsHtml = buildItemsHtml(items, layoutClass);
+    return `<section class="category-section ${extraClass}" id="${id}">
+      <div class="category-header">
+        <div class="category-icon-big"><span class="material-symbols-rounded">${iconName}</span></div>
+        <h2 class="category-title">${title}</h2>
+        <div class="category-line"><span class="dot"></span></div>
+      </div>
+      ${itemsHtml}
+    </section>`;
+  }
+
+  // ============ 5. BUILD ITEMS HTML ============
+  function buildItemsHtml(items, layoutClass) {
+    const layout = settings.menuLayout || "grid";
+    const showPrep = settings.showPrepTime === true;
+
+    if (layout === "list") {
+      return `<div class="menu-list">${items.map(item => {
+        const isOffer = item.isOffer && item.offerPrice && Number(item.offerPrice) < Number(item.price);
+        return `<div class="card-list">
+          <div class="card-list-img-wrap">
+            ${item.imageUrl ? `<img src="${item.imageUrl}" class="card-list-img" loading="lazy" decoding="async" onload="this.classList.add('loaded')" onerror="this.style.display='none'">` : ""}
+          </div>
+          <div class="item-info">
+            <div class="item-name">${item.name}</div>
+            ${showPrep && item.prepTime > 0 ? `<div class="item-prep"><span class="material-symbols-rounded">schedule</span>${item.prepTime} دقيقة</div>` : ""}
+            <div class="item-price">
+              ${isOffer ? `<span class="old">${fmt(item.price)}</span>` : ""}
+              ${fmt(isOffer ? item.offerPrice : item.price)} <span class="currency">ل.س</span>
+            </div>
+          </div>
+        </div>`;
+      }).join("")}</div>`;
+    }
+
+    return `<div class="${layoutClass}">${items.map(item => {
+      const isOffer = item.isOffer && item.offerPrice && Number(item.offerPrice) < Number(item.price);
+      const badges = [];
+      if (item.isPopular) badges.push(`<span class="item-badge popular">⭐ الأكثر طلباً</span>`);
+      if (isOffer) badges.push(`<span class="item-badge offer">🔥 خصم</span>`);
+      return `<div class="item-card">
+        ${badges.length ? `<div class="item-badges">${badges.join("")}</div>` : ""}
+        <div class="item-img-wrap">
+          <div class="img-fallback"><span class="material-symbols-rounded">restaurant</span></div>
+          ${item.imageUrl ? `<img src="${item.imageUrl}" class="item-img" alt="${item.name}" loading="lazy" decoding="async" onload="this.classList.add('loaded')" onerror="this.style.display='none'">` : ""}
+        </div>
+        <div class="item-content">
+          <div class="item-name">${item.name}</div>
+          ${showPrep && item.prepTime > 0 ? `<div class="item-prep"><span class="material-symbols-rounded">schedule</span>${item.prepTime} دقيقة</div>` : ""}
+          <div class="item-price">
+            ${isOffer ? `<span class="old">${fmt(item.price)}</span>` : ""}
+            ${fmt(isOffer ? item.offerPrice : item.price)} <span class="currency">ل.س</span>
+          </div>
+        </div>
+      </div>`;
+    }).join("")}</div>`;
+  }
+
+  // ============ 6. IMAGE HANDLERS ============
+  function attachImageHandlers() {
+    document.querySelectorAll('.item-img').forEach(img => {
+      if (img.complete && img.naturalHeight !== 0) img.classList.add('loaded');
+    });
+  }
+
+  // ============ 7. SCROLL SPY ============
   function setupScrollSpy() {
     const sections = document.querySelectorAll('.category-section');
     const navItems = document.querySelectorAll('.nav-item');
@@ -565,14 +743,29 @@ body {
     onScroll();
   }
 
-  // ============ 5. BACK TO TOP ============
-  const backToTop = $("backToTop");
-  window.addEventListener('scroll', () => {
-    backToTop.classList.toggle('show', window.scrollY > 400);
-  }, { passive: true });
-  backToTop.addEventListener('click', () => {
-    window.scrollTo({ top: 0, behavior: 'smooth' });
-  });
+  // ============ 8. FLOATING CONTACT BUTTONS ============
+  function renderFloatingActions() {
+    const container = $("floatingActions");
+    if (!settings.showCallButton) { container.innerHTML = ""; return; }
+
+    let html = "";
+    const whatsapp = settings.whatsapp || "";
+    const phone = settings.phone || "";
+
+    if (whatsapp) {
+      html += `<a class="fab whatsapp" href="https://wa.me/${whatsapp}" target="_blank" rel="noopener" aria-label="واتساب">
+        <svg viewBox="0 0 24 24" width="26" height="26" fill="#fff"><path d="M17.5 14.4c-.3-.15-1.76-.87-2.03-.97-.27-.1-.47-.15-.67.15-.2.3-.77.97-.94 1.17-.17.2-.35.22-.65.07-.3-.15-1.26-.46-2.4-1.48-.89-.8-1.49-1.78-1.66-2.08-.17-.3-.02-.46.13-.61.13-.13.3-.35.45-.52.15-.17.2-.3.3-.5.1-.2.05-.37-.03-.52-.07-.15-.67-1.62-.92-2.22-.24-.58-.49-.5-.67-.51-.17-.01-.37-.01-.57-.01-.2 0-.52.07-.8.37-.27.3-1.04 1.02-1.04 2.48 0 1.46 1.07 2.88 1.22 3.08.15.2 2.1 3.2 5.08 4.49.71.31 1.26.49 1.7.62.71.23 1.36.2 1.87.12.57-.09 1.76-.72 2.01-1.41.25-.7.25-1.29.17-1.41-.07-.12-.27-.2-.57-.35zM12 2C6.48 2 2 6.48 2 12c0 1.77.46 3.42 1.28 4.86L2 22l5.3-1.27C8.7 21.54 10.3 22 12 22c5.52 0 10-4.48 10-10S17.52 2 12 2zm0 18.2c-1.55 0-3.02-.42-4.29-1.15l-.31-.18-3.15.75.76-3.07-.2-.32C3.94 14.94 3.5 13.52 3.5 12c0-4.69 3.81-8.5 8.5-8.5s8.5 3.81 8.5 8.5-3.81 8.5-8.5 8.5z"/></svg>
+        <span class="fab-tooltip">واتساب</span>
+      </a>`;
+    }
+    if (phone) {
+      html += `<a class="fab phone" href="tel:${phone}" aria-label="اتصل">
+        <span class="material-symbols-rounded">call</span>
+        <span class="fab-tooltip">اتصل مباشرة</span>
+      </a>`;
+    }
+    container.innerHTML = html;
+  }
 </script>
 </body>
 </html>
