@@ -6,7 +6,6 @@
 <title>بيت الباشا | قائمة الطعام</title>
 <link href="https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&family=Tajawal:wght@300;400;700;900&display=swap" rel="stylesheet">
 <style>
-/* الثيمات */
 :root, [data-theme="royal"] {
   --bg-main: #0a0a0a; --card-bg: #141414; --gold: #D4AF37; --gold-light: #F3E5AB;
   --text-main: #FDFBF7; --text-muted: #888; --border: rgba(212, 175, 55, 0.15);
@@ -56,7 +55,7 @@ body {
   background: var(--card-bg); border: 1px solid var(--border); padding: 12px 10px; border-radius: 12px;
   text-decoration: none; color: var(--text-muted); transition: all 0.4s ease; box-shadow: 0 4px 15px rgba(0,0,0,0.4);
 }
-.nav-item svg { width: 28px; height: 28px; stroke: var(--text-muted); fill: none; stroke-width: 1.2; margin-bottom: 8px; transition: all 0.4s ease; }
+.nav-item svg { width: 28px; height: 28px; stroke: var(--text-muted); fill: none; stroke-width: 1.6; margin-bottom: 8px; transition: all 0.4s ease; }
 .nav-item span { font-size: 0.85em; font-weight: 700; white-space: nowrap; }
 .nav-item:hover, .nav-item.active { color: var(--gold); border-color: var(--gold); box-shadow: 0 8px 25px rgba(212, 175, 55, 0.15); transform: translateY(-3px); }
 .nav-item:hover svg, .nav-item.active svg { stroke: var(--gold); transform: scale(1.1); }
@@ -65,37 +64,50 @@ body {
 .menu-container { max-width: 1100px; margin: 0 auto; padding: 40px 20px; }
 .category-section { margin-bottom: 60px; scroll-margin-top: 120px; }
 
-/* Category Title with Icon */
+/* Category Header with big icon */
 .category-header {
   display: flex; flex-direction: column; align-items: center; text-align: center;
-  margin-bottom: 30px; padding: 20px 10px 25px;
-  border-bottom: 1px dashed var(--border);
+  margin-bottom: 35px; padding: 10px 10px 25px;
   position: relative;
 }
 .category-icon-big {
-  width: 70px; height: 70px; border-radius: 50%;
-  background: var(--card-bg); border: 1.5px solid var(--gold);
+  width: 88px; height: 88px; border-radius: 50%;
+  background: linear-gradient(145deg, var(--card-bg), var(--bg-3));
+  border: 1.5px solid var(--gold);
   display: flex; align-items: center; justify-content: center;
-  margin-bottom: 14px;
-  box-shadow: 0 8px 30px rgba(212, 175, 55, 0.15);
+  margin-bottom: 16px;
+  box-shadow: 0 0 0 6px rgba(212, 175, 55, 0.08), 0 12px 40px rgba(212, 175, 55, 0.2);
+  position: relative;
+  transition: transform 0.4s ease, box-shadow 0.4s ease;
 }
+.category-icon-big::before {
+  content: ''; position: absolute; inset: -8px; border-radius: 50%;
+  border: 1px dashed var(--gold); opacity: 0.25;
+  animation: rotateSlow 30s linear infinite;
+}
+@keyframes rotateSlow { to { transform: rotate(360deg); } }
 .category-icon-big svg {
-  width: 36px; height: 36px; stroke: var(--gold); fill: none;
-  stroke-width: 1.4; stroke-linecap: round; stroke-linejoin: round;
+  width: 42px; height: 42px; stroke: var(--gold); fill: none;
+  stroke-width: 1.6; stroke-linecap: round; stroke-linejoin: round;
+}
+.category-header:hover .category-icon-big {
+  transform: scale(1.06);
+  box-shadow: 0 0 0 8px rgba(212, 175, 55, 0.12), 0 16px 50px rgba(212, 175, 55, 0.3);
 }
 .category-title {
-  font-family: 'Amiri', serif; font-size: 1.9em; color: var(--gold);
-  margin: 0; line-height: 1.3;
+  font-family: 'Amiri', serif; font-size: 2em; color: var(--gold);
+  margin: 0; line-height: 1.3; letter-spacing: 0.5px;
 }
 .category-line {
-  display: flex; align-items: center; justify-content: center; gap: 12px;
-  margin-top: 10px; color: var(--gold); opacity: 0.6;
+  display: flex; align-items: center; justify-content: center; gap: 10px;
+  margin-top: 12px; color: var(--gold);
 }
 .category-line::before, .category-line::after {
-  content: ''; height: 1px; width: 40px; background: var(--gold); opacity: 0.5;
+  content: ''; height: 1px; width: 50px; background: linear-gradient(90deg, transparent, var(--gold), transparent);
 }
 .category-line .dot {
-  width: 5px; height: 5px; border-radius: 50%; background: var(--gold);
+  width: 6px; height: 6px; border-radius: 50%; background: var(--gold);
+  box-shadow: 0 0 10px var(--gold);
 }
 
 /* Layouts */
@@ -118,7 +130,6 @@ body {
 
 /* Empty */
 .empty-state { text-align: center; padding: 80px 20px; color: var(--text-muted); }
-.empty-state svg { width: 60px; height: 60px; stroke: var(--text-muted); fill: none; stroke-width: 1.2; margin: 0 auto 20px; opacity: 0.5; }
 
 /* Skeleton */
 .skeleton-card { background: var(--card-bg); border-radius: 14px; overflow: hidden; border: 1px solid var(--border); }
@@ -167,25 +178,36 @@ body {
   const $ = id => document.getElementById(id);
   const fmt = n => Number(n || 0).toLocaleString('en-US');
 
-  // 🎨 أيقونات لكل قسم — "شي بيشبهو المشروبات والأكل وغيرو"
+  // 🎨 أيقونات جديدة احترافية لكل قسم
   const icons = {
-    "المشروبات الساخنة": `<svg viewBox="0 0 24 24"><path d="M17 8h1a4 4 0 1 1 0 8h-1"/><path d="M3 8h14v9a4 4 0 0 1-4 4H7a4 4 0 0 1-4-4Z"/><path d="M6 2v2"/><path d="M10 2v2"/><path d="M14 2v2"/></svg>`,
-    "الأراكيل": `<svg viewBox="0 0 24 24"><path d="M12 22v-6"/><path d="M8 22h8"/><path d="M12 16a4 4 0 0 0 4-4V6a4 4 0 0 0-8 0v6a4 4 0 0 0 4 4Z"/><path d="M10 6h4"/><circle cx="12" cy="4" r="0.5" fill="currentColor"/></svg>`,
-    "مشاوي": `<svg viewBox="0 0 24 24"><path d="M4 14h16"/><path d="M6 14v4a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2v-4"/><path d="M8 10V2"/><path d="M12 10V2"/><path d="M16 10V2"/></svg>`,
-    "الشاورما": `<svg viewBox="0 0 24 24"><path d="M4 8h16v10a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2Z"/><path d="M6 8V4h12v4"/><path d="M10 12v4"/><path d="M14 12v4"/></svg>`,
-    "السندويش والبرغر": `<svg viewBox="0 0 24 24"><path d="M4 10h16"/><path d="M4 14h16"/><path d="M6 14v2a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2v-2"/><path d="M6 10V6a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v4"/><path d="M9 7h.01"/><path d="M15 7h.01"/></svg>`,
-    "الوجبات": `<svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M12 2a10 10 0 0 0 0 20"/><path d="M2 12h20"/><circle cx="12" cy="12" r="3"/></svg>`,
-    "بيتزا وفطائر": `<svg viewBox="0 0 24 24"><path d="M12 2L2 22h20L12 2z"/><circle cx="12" cy="14" r="1"/><circle cx="8" cy="18" r="1"/><circle cx="16" cy="18" r="1"/><circle cx="12" cy="18" r="0.6"/></svg>`,
-    "مقبلات باردة": `<svg viewBox="0 0 24 24"><path d="M12 22a10 10 0 0 0 10-10H2a10 10 0 0 0 10 10z"/><path d="M12 2v10"/><path d="M8 6l4 4"/><path d="M16 6l-4 4"/><path d="M4 12h16"/></svg>`,
-    "وجبات ساخنة": `<svg viewBox="0 0 24 24"><path d="M3 12h18"/><path d="M5 12v4a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2v-4"/><path d="M8 6l2 4"/><path d="M16 6l-2 4"/><path d="M12 6v2"/></svg>`,
-    "مقبلات ساخنة": `<svg viewBox="0 0 24 24"><path d="M3 12h18"/><path d="M5 12v4a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2v-4"/><path d="M8 6l2 4"/><path d="M16 6l-2 4"/><circle cx="12" cy="8" r="1"/></svg>`,
-    "فتات": `<svg viewBox="0 0 24 24"><path d="M4 10h16v8a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2Z"/><path d="M8 10V6h8v4"/><path d="M10 14h4"/></svg>`,
-    "فريتشينو وعصائر": `<svg viewBox="0 0 24 24"><path d="M8 2h8l1 10H7Z"/><path d="M9 12v8a2 2 0 0 0 2 2h2a2 2 0 0 0 2-2v-8"/><path d="M12 2v4"/><path d="M10 18h4"/></svg>`,
-    "كوكتيلات ومشروبات باردة": `<svg viewBox="0 0 24 24"><path d="M6 4h12l-1 16H7Z"/><path d="M6 8h12"/><path d="M12 4V2"/><path d="M14 2h-4"/><circle cx="10" cy="14" r="1"/><circle cx="14" cy="16" r="1"/></svg>`,
-    "حلويات": `<svg viewBox="0 0 24 24"><path d="M20 10c0-3-3-5-8-5s-8 2-8 5c0 2 1 3 2 4v4a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2v-4c1-1 2-2 2-4Z"/><path d="M8 14h8"/><circle cx="12" cy="8" r="1"/></svg>`,
-    "قهوة": `<svg viewBox="0 0 24 24"><path d="M17 8h1a4 4 0 1 1 0 8h-1"/><path d="M3 8h14v9a4 4 0 0 1-4 4H7a4 4 0 0 1-4-4Z"/><path d="M6 2v2"/><path d="M10 2v2"/></svg>`
+    "المشروبات الساخنة": `<svg viewBox="0 0 24 24"><path d="M18 8h1a4 4 0 1 1 0 8h-1"/><path d="M2 8h16v9a4 4 0 0 1-4 4H6a4 4 0 0 1-4-4V8z"/><path d="M6 2v3M10 2v3M14 2v3"/></svg>`,
+    
+    "الأراكيل": `<svg viewBox="0 0 24 24"><path d="M10 22h4M12 22v-9"/><path d="M8 13h8"/><path d="M8 13V8a4 4 0 0 1 8 0v5"/><path d="M16 6h2V4h-2"/><path d="M18 4l1-2"/><path d="M18 2l1 1"/><path d="M5 13c0 2-1 3-1 5h3"/></svg>`,
+    
+    "مشاوي": `<svg viewBox="0 0 24 24"><path d="M3 13h18"/><path d="M5 13v5a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2v-5"/><path d="M8 11V2M12 11V2M16 11V2"/><path d="M6.5 6h3M10.5 8h3M14.5 4h3"/><circle cx="8" cy="7" r="0.6" fill="currentColor"/><circle cx="12" cy="5" r="0.6" fill="currentColor"/><circle cx="16" cy="8" r="0.6" fill="currentColor"/></svg>`,
+    
+    "الشاورما": `<svg viewBox="0 0 24 24"><path d="M5 21h14"/><path d="M7 21V7a5 5 0 0 1 10 0v14"/><path d="M7 11h10M7 15h10M7 7h10"/><path d="M17 9l3 2-2 3"/><path d="M20 11v10"/></svg>`,
+    
+    "السندويش والبرغر": `<svg viewBox="0 0 24 24"><path d="M3 10h18"/><path d="M3 14h18"/><path d="M5 10V7a3 3 0 0 1 3-3h8a3 3 0 0 1 3 3v3"/><path d="M5 14v3a3 3 0 0 0 3 3h8a3 3 0 0 0 3-3v-3"/><circle cx="8" cy="8" r="0.6" fill="currentColor"/><circle cx="12" cy="8" r="0.6" fill="currentColor"/><circle cx="16" cy="8" r="0.6" fill="currentColor"/></svg>`,
+    
+    "الوجبات": `<svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="3.5"/><path d="M12 3v2M12 19v2M3 12h2M19 12h2"/><path d="M6 6l1.5 1.5M18 18l-1.5-1.5"/></svg>`,
+    
+    "بيتزا وفطائر": `<svg viewBox="0 0 24 24"><path d="M12 2 2 22h20L12 2z"/><circle cx="12" cy="14" r="1" fill="currentColor"/><circle cx="9" cy="18" r="1" fill="currentColor"/><circle cx="15" cy="18" r="1" fill="currentColor"/><circle cx="12" cy="18" r="0.5" fill="currentColor"/></svg>`,
+    
+    "مقبلات باردة": `<svg viewBox="0 0 24 24"><path d="M3 12h18a9 9 0 0 1-18 0z"/><path d="M8 12c0-2 1.5-4 4-4s4 2 4 4"/><path d="M12 4v4"/><path d="M9 6l3-2 3 2"/><circle cx="8" cy="15" r="0.6" fill="currentColor"/><circle cx="16" cy="15" r="0.6" fill="currentColor"/></svg>`,
+    
+    "وجبات ساخنة": `<svg viewBox="0 0 24 24"><path d="M4 13h16v5a3 3 0 0 1-3 3H7a3 3 0 0 1-3-3v-5z"/><path d="M7 5c0-1 1-2 2-2s2 1 2 2"/><path d="M13 5c0-1 1-2 2-2s2 1 2 2"/><path d="M8 9h8"/><path d="M9 16h6"/></svg>`,
+    
+    "مقبلات ساخنة": `<svg viewBox="0 0 24 24"><path d="M5 7h14l-1 10a3 3 0 0 1-3 3H9a3 3 0 0 1-3-3L5 7z"/><path d="M8 4l1 3M12 3v4M16 4l-1 3"/><path d="M6 12h12"/></svg>`,
+    
+    "فتات": `<svg viewBox="0 0 24 24"><path d="M3 11h18a9 9 0 0 1-18 0z"/><path d="M7 11V8a5 5 0 0 1 10 0v3"/><path d="M9 8h6"/><circle cx="10" cy="15" r="0.6" fill="currentColor"/><circle cx="14" cy="15" r="0.6" fill="currentColor"/><circle cx="12" cy="17" r="0.5" fill="currentColor"/></svg>`,
+    
+    "فريتشينو وعصائر": `<svg viewBox="0 0 24 24"><path d="M7 4h10l1 12a4 4 0 0 1-4 4h-4a4 4 0 0 1-4-4L7 4z"/><path d="M7 8h10"/><path d="M12 4V2"/><path d="M10 2h4"/><circle cx="10" cy="12" r="0.6" fill="currentColor"/><circle cx="14" cy="14" r="0.6" fill="currentColor"/><circle cx="11" cy="17" r="0.5" fill="currentColor"/><path d="M9 21h6"/></svg>`,
+    
+    "كوكتيلات ومشروبات باردة": `<svg viewBox="0 0 24 24"><path d="M5 4h14l-2 17H7L5 4z"/><path d="M5 4l14 4"/><path d="M17 6l2-4"/><path d="M19 2l-1 2"/><circle cx="10" cy="11" r="0.6" fill="currentColor"/><circle cx="13" cy="14" r="0.6" fill="currentColor"/><circle cx="11" cy="17" r="0.6" fill="currentColor"/></svg>`
   };
-  const defaultIcon = `<svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M8 12h8"/><path d="M12 8v8"/></svg>`;
+  
+  const defaultIcon = `<svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M8 12h8M12 8v8"/></svg>`;
 
   let allItems = [];
   let settings = { theme: "royal", menuLayout: "grid", logoType: "svg", logoUrl: "", categoryOrder: [], showHero: true, name: "بيت الباشا", subtitle: "حيث تلتقي نكهة الضيافة بأجواء الراحة" };
@@ -200,12 +222,10 @@ body {
       if (settings.name) $("restaurantName").textContent = settings.name;
       if (settings.subtitle) $("restaurantSubtitle").textContent = settings.subtitle;
 
-      // 👁️ إظهار/إخفاء الواجهة العلوية
       const hero = $("heroSection");
       if (settings.showHero === false) hero.classList.add("hidden");
       else hero.classList.remove("hidden");
 
-      // Logo
       const logoBox = $("logoContainer");
       if (settings.logoType === "image" && settings.logoUrl) {
         logoBox.innerHTML = `<img src="${settings.logoUrl}" alt="Logo">`;
@@ -225,10 +245,7 @@ body {
   function renderMenu() {
     const nav = $("nav"), menu = $("menu");
     if (allItems.length === 0) {
-      menu.innerHTML = `<div class="empty-state">
-        <svg viewBox="0 0 24 24"><path d="M3 3h18v18H3z"/><path d="M9 9h6v6H9z"/></svg>
-        <p>لا توجد أصناف حالياً.</p>
-      </div>`;
+      menu.innerHTML = `<div class="empty-state"><p>لا توجد أصناف حالياً.</p></div>`;
       nav.innerHTML = "";
       return;
     }
@@ -240,7 +257,6 @@ body {
       grouped[cat].push(item);
     });
 
-    // ترتيب الأقسام
     const order = Array.isArray(settings.categoryOrder) ? settings.categoryOrder : [];
     const inOrder = order.filter(c => grouped[c]);
     const notInOrder = Object.keys(grouped).filter(c => !order.includes(c)).sort((a,b) => a.localeCompare(b, 'ar'));
@@ -252,7 +268,6 @@ body {
       const id = `cat-${index}`;
       const icon = icons[cat] || defaultIcon;
 
-      // Nav item
       nav.innerHTML += `<a href="#${id}" class="nav-item">${icon}<span>${cat}</span></a>`;
 
       const layout = settings.menuLayout || "grid";
@@ -261,15 +276,16 @@ body {
       if (layout === "list") {
         itemsHtml = `<div class="menu-list">${grouped[cat].map(item => `
           <div class="card-list">
-            <img src="${item.imageUrl || 'https://placehold.co/200x200/141414/D4AF37?text=Food'}" class="card-list-img" onerror="this.src='https://placehold.co/200x200/141414/D4AF37?text=Food'">
+            <img src="${item.imageUrl || ''}" class="card-list-img" onerror="this.style.display='none'">
             <div style="flex:1"><div class="item-name" style="margin-bottom:4px">${item.name}</div><div class="item-price">${fmt(item.price)} ل.س</div></div>
           </div>
         `).join('')}</div>`;
       } else {
-        // grid أو sections — نعرض بنفس الشبكة
         itemsHtml = `<div class="menu-grid">${grouped[cat].map(item => `
           <div class="item-card">
-            <div class="item-img-wrap"><img src="${item.imageUrl || 'https://placehold.co/400x300/141414/D4AF37?text=Food'}" class="item-img" alt="${item.name}" loading="lazy" onerror="this.src='https://placehold.co/400x300/141414/D4AF37?text=Food'"></div>
+            <div class="item-img-wrap">
+              <img src="${item.imageUrl || ''}" class="item-img" alt="${item.name}" loading="lazy" onerror="this.parentElement.style.background='linear-gradient(135deg, var(--bg-3), var(--card-bg))'; this.style.display='none'">
+            </div>
             <div class="item-content">
               <div class="item-name">${item.name}</div>
               <div class="item-price">${fmt(item.price)} <span>ل.س</span></div>
@@ -278,7 +294,6 @@ body {
         `).join('')}</div>`;
       }
 
-      // 🎨 عنوان القسم مع أيقونة كبيرة فوقه
       menu.innerHTML += `<section class="category-section" id="${id}">
         <div class="category-header">
           <div class="category-icon-big">${icon}</div>
