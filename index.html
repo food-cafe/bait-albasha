@@ -1,77 +1,136 @@
 <!DOCTYPE html>
-<html lang="ar" dir="rtl">
+<html lang="ar" dir="rtl" data-theme="royal">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0">
 <title>بيت الباشا | قائمة الطعام</title>
 <link href="https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&family=Tajawal:wght@300;400;700;900&display=swap" rel="stylesheet">
 <style>
-:root {
+/* الثيمات */
+:root, [data-theme="royal"] {
   --bg-main: #0a0a0a; --card-bg: #141414; --gold: #D4AF37; --gold-light: #F3E5AB;
-  --gold-dark: #997A00; --text-main: #FDFBF7; --text-muted: #888; --border: rgba(212, 175, 55, 0.15);
+  --text-main: #FDFBF7; --text-muted: #888; --border: rgba(212, 175, 55, 0.15);
+  --bg-3: #1A1A1A;
 }
+[data-theme="white-gold"] {
+  --bg-main: #F8F9FA; --card-bg: #FFFFFF; --gold: #C9A227; --gold-light: #D4AF37;
+  --text-main: #1A1A1A; --text-muted: #555; --border: rgba(201, 162, 39, 0.2);
+  --bg-3: #F1F3F5;
+}
+[data-theme="dark-red"] {
+  --bg-main: #0a0a0a; --card-bg: #141414; --gold: #E10600; --gold-light: #FF4D4D;
+  --text-main: #F5F5F5; --text-muted: #A0A0A0; --border: rgba(225, 6, 0, 0.15);
+  --bg-3: #1A1A1A;
+}
+
 * { margin: 0; padding: 0; box-sizing: border-box; }
 html { scroll-behavior: smooth; }
 body {
   font-family: 'Tajawal', sans-serif; background-color: var(--bg-main); color: var(--text-main);
-  line-height: 1.6; background-image: radial-gradient(circle at top, #1a1a1a 0%, #0a0a0a 70%);
-  background-attachment: fixed; padding-bottom: 50px; -webkit-font-smoothing: antialiased;
+  line-height: 1.6; background-image: radial-gradient(circle at top, rgba(255,255,255,0.03) 0%, transparent 70%);
+  background-attachment: fixed; padding-bottom: 50px; -webkit-font-smoothing: antialiased; transition: background 0.4s;
 }
+
+/* Hero */
 .hero { padding: 50px 20px 40px; text-align: center; border-bottom: 1px solid var(--border); position: relative; }
 .hero::after { content: ''; position: absolute; bottom: 0; left: 20%; right: 20%; height: 1px; background: linear-gradient(90deg, transparent, var(--gold), transparent); }
+.hero.hidden { display: none; }
 .hero-logo {
   width: 85px; height: 85px; border-radius: 50%; border: 1px solid var(--gold);
   display: flex; align-items: center; justify-content: center; font-family: 'Amiri', serif;
-  font-size: 26px; color: var(--gold); margin: 0 auto 15px; box-shadow: 0 0 40px rgba(212, 175, 55, 0.15); background: #111;
+  font-size: 26px; color: var(--gold); margin: 0 auto 15px; box-shadow: 0 0 40px rgba(212, 175, 55, 0.15); background: var(--card-bg);
+  overflow: hidden;
 }
+.hero-logo img { width: 100%; height: 100%; object-fit: contain; border-radius: 50%; }
 .hero h1 { font-family: 'Amiri', serif; font-size: 2.5em; color: var(--gold); margin-bottom: 5px; }
 .hero h2 { font-size: 0.85em; font-weight: 400; letter-spacing: 8px; color: var(--text-muted); margin-bottom: 15px; text-transform: uppercase; }
 .hero p { font-size: 1.05em; color: var(--text-main); max-width: 400px; margin: 0 auto; opacity: 0.7; font-weight: 300; }
 
-.nav-wrapper { position: sticky; top: 0; z-index: 100; background: rgba(10, 10, 10, 0.85); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px); border-bottom: 1px solid var(--border); padding: 15px 0; }
+/* Nav */
+.nav-wrapper { position: sticky; top: 0; z-index: 100; background: rgba(10, 10, 10, 0.85); backdrop-filter: blur(20px); border-bottom: 1px solid var(--border); padding: 15px 0; }
+[data-theme="white-gold"] .nav-wrapper { background: rgba(255, 255, 255, 0.85); }
 .nav-categories { display: flex; gap: 12px; overflow-x: auto; scrollbar-width: none; padding: 0 20px; max-width: 1200px; margin: 0 auto; }
 .nav-categories::-webkit-scrollbar { display: none; }
 .nav-item {
   display: flex; flex-direction: column; align-items: center; justify-content: center; min-width: 100px;
-  background: linear-gradient(145deg, #161616, #0f0f0f); border: 1px solid var(--border);
-  padding: 12px 10px; border-radius: 12px; text-decoration: none; color: var(--text-muted);
-  transition: all 0.4s ease; box-shadow: 0 4px 15px rgba(0,0,0,0.4);
+  background: var(--card-bg); border: 1px solid var(--border); padding: 12px 10px; border-radius: 12px;
+  text-decoration: none; color: var(--text-muted); transition: all 0.4s ease; box-shadow: 0 4px 15px rgba(0,0,0,0.4);
 }
 .nav-item svg { width: 28px; height: 28px; stroke: var(--text-muted); fill: none; stroke-width: 1.2; margin-bottom: 8px; transition: all 0.4s ease; }
 .nav-item span { font-size: 0.85em; font-weight: 700; white-space: nowrap; }
-.nav-item:hover, .nav-item.active { background: linear-gradient(145deg, #222, #111); color: var(--gold); border-color: var(--gold); box-shadow: 0 8px 25px rgba(212, 175, 55, 0.15); transform: translateY(-3px); }
-.nav-item:hover svg, .nav-item.active svg { stroke: var(--gold); transform: scale(1.1); filter: drop-shadow(0 0 5px rgba(212,175,55,0.5)); }
+.nav-item:hover, .nav-item.active { color: var(--gold); border-color: var(--gold); box-shadow: 0 8px 25px rgba(212, 175, 55, 0.15); transform: translateY(-3px); }
+.nav-item:hover svg, .nav-item.active svg { stroke: var(--gold); transform: scale(1.1); }
 
+/* Menu */
 .menu-container { max-width: 1100px; margin: 0 auto; padding: 40px 20px; }
 .category-section { margin-bottom: 60px; scroll-margin-top: 120px; }
-.category-title { font-family: 'Amiri', serif; font-size: 1.8em; color: var(--gold); margin-bottom: 25px; display: flex; align-items: center; gap: 15px; }
-.category-title::after { content: ''; flex: 1; height: 1px; background: linear-gradient(90deg, var(--gold), transparent); }
 
+/* Category Title with Icon */
+.category-header {
+  display: flex; flex-direction: column; align-items: center; text-align: center;
+  margin-bottom: 30px; padding: 20px 10px 25px;
+  border-bottom: 1px dashed var(--border);
+  position: relative;
+}
+.category-icon-big {
+  width: 70px; height: 70px; border-radius: 50%;
+  background: var(--card-bg); border: 1.5px solid var(--gold);
+  display: flex; align-items: center; justify-content: center;
+  margin-bottom: 14px;
+  box-shadow: 0 8px 30px rgba(212, 175, 55, 0.15);
+}
+.category-icon-big svg {
+  width: 36px; height: 36px; stroke: var(--gold); fill: none;
+  stroke-width: 1.4; stroke-linecap: round; stroke-linejoin: round;
+}
+.category-title {
+  font-family: 'Amiri', serif; font-size: 1.9em; color: var(--gold);
+  margin: 0; line-height: 1.3;
+}
+.category-line {
+  display: flex; align-items: center; justify-content: center; gap: 12px;
+  margin-top: 10px; color: var(--gold); opacity: 0.6;
+}
+.category-line::before, .category-line::after {
+  content: ''; height: 1px; width: 40px; background: var(--gold); opacity: 0.5;
+}
+.category-line .dot {
+  width: 5px; height: 5px; border-radius: 50%; background: var(--gold);
+}
+
+/* Layouts */
 .menu-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); gap: 15px; }
 @media (min-width: 768px) { .menu-grid { grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); gap: 25px; } }
 
+.menu-list { display: flex; flex-direction: column; gap: 12px; }
+.card-list { display: flex; gap: 14px; background: var(--card-bg); border-radius: 14px; overflow: hidden; border: 1px solid var(--border); padding: 12px; align-items: center; }
+.card-list-img { width: 80px; height: 80px; border-radius: 10px; object-fit: cover; flex-shrink: 0; }
+
+/* Card Grid */
 .item-card { background: var(--card-bg); border: 1px solid var(--border); border-radius: 14px; overflow: hidden; display: flex; flex-direction: column; transition: 0.4s ease; box-shadow: 0 10px 30px rgba(0,0,0,0.5); }
 .item-card:active { transform: scale(0.98); }
 @media (hover: hover) { .item-card:hover { transform: translateY(-6px); border-color: var(--gold); box-shadow: 0 15px 35px rgba(212,175,55,0.1); } .item-card:hover .item-img { transform: scale(1.08); } }
-.item-img-wrap { width: 100%; aspect-ratio: 4/3; overflow: hidden; position: relative; background: #111; }
+.item-img-wrap { width: 100%; aspect-ratio: 4/3; overflow: hidden; position: relative; background: var(--bg-3); }
 .item-img { width: 100%; height: 100%; object-fit: cover; transition: 0.6s ease; }
 .item-content { padding: 15px; text-align: center; display: flex; flex-direction: column; justify-content: space-between; flex-grow: 1; }
 .item-name { font-size: 1.05em; font-weight: 700; color: var(--text-main); margin-bottom: 12px; line-height: 1.3; }
 .item-price { font-family: 'Tajawal', sans-serif; font-size: 1.1em; font-weight: 900; color: var(--gold); margin-top: auto; background: rgba(212, 175, 55, 0.08); padding: 4px 15px; border-radius: 20px; display: inline-block; align-self: center; border: 1px solid rgba(212, 175, 55, 0.2); }
 
+/* Empty */
+.empty-state { text-align: center; padding: 80px 20px; color: var(--text-muted); }
+.empty-state svg { width: 60px; height: 60px; stroke: var(--text-muted); fill: none; stroke-width: 1.2; margin: 0 auto 20px; opacity: 0.5; }
+
 /* Skeleton */
 .skeleton-card { background: var(--card-bg); border-radius: 14px; overflow: hidden; border: 1px solid var(--border); }
-.skeleton-img { aspect-ratio: 4/3; background: linear-gradient(90deg, #141414 25%, #222 50%, #141414 75%); background-size: 200% 100%; animation: shimmer 1.5s infinite; }
-.skeleton-text { height: 16px; margin: 12px 15px; border-radius: 4px; background: linear-gradient(90deg, #141414 25%, #222 50%, #141414 75%); background-size: 200% 100%; animation: shimmer 1.5s infinite; width: 70%; }
+.skeleton-img { aspect-ratio: 4/3; background: linear-gradient(90deg, var(--bg-3) 25%, var(--card-bg) 50%, var(--bg-3) 75%); background-size: 200% 100%; animation: shimmer 1.5s infinite; }
+.skeleton-text { height: 16px; margin: 12px 15px; border-radius: 4px; background: linear-gradient(90deg, var(--bg-3) 25%, var(--card-bg) 50%, var(--bg-3) 75%); background-size: 200% 100%; animation: shimmer 1.5s infinite; width: 70%; }
 @keyframes shimmer { 0% { background-position: 200% 0; } 100% { background-position: -200% 0; } }
-
-.empty-state { text-align: center; padding: 60px 20px; color: var(--text-muted); }
 </style>
 </head>
 <body>
 
-<header class="hero">
-  <div class="hero-logo">الباشا</div>
+<header class="hero" id="heroSection">
+  <div class="hero-logo" id="logoContainer">الباشا</div>
   <h1 id="restaurantName">بيت الباشا</h1>
   <h2>BEIT AL BASHA</h2>
   <p id="restaurantSubtitle">حيث تلتقي نكهة الضيافة بأجواء الراحة</p>
@@ -82,9 +141,7 @@ body {
 </div>
 
 <main class="menu-container" id="menu">
-  <!-- Skeleton while loading -->
   <div class="menu-grid" id="skeletonGrid">
-    <div class="skeleton-card"><div class="skeleton-img"></div><div class="skeleton-text"></div></div>
     <div class="skeleton-card"><div class="skeleton-img"></div><div class="skeleton-text"></div></div>
     <div class="skeleton-card"><div class="skeleton-img"></div><div class="skeleton-text"></div></div>
     <div class="skeleton-card"><div class="skeleton-img"></div><div class="skeleton-text"></div></div>
@@ -95,14 +152,13 @@ body {
   import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
   import { getFirestore, doc, onSnapshot } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
-  // ⚠️ ضع كود Firebase الخاص بمشروع بيت الباشا هنا
   const firebaseConfig = {
-    apiKey: "YOUR_API_KEY",
-    authDomain: "YOUR_PROJECT.firebaseapp.com",
-    projectId: "YOUR_PROJECT_ID",
-    storageBucket: "YOUR_PROJECT.appspot.com",
-    messagingSenderId: "YOUR_SENDER_ID",
-    appId: "YOUR_APP_ID"
+    apiKey: "AIzaSyAE0-gK_eWE5cRxkX-j22zoOYfMSZfNLKk",
+    authDomain: "biet-albasha.firebaseapp.com",
+    projectId: "biet-albasha",
+    storageBucket: "biet-albasha.firebasestorage.app",
+    messagingSenderId: "349931331130",
+    appId: "1:349931331130:web:1562743baa3f76a9d51f03"
   };
 
   const app = initializeApp(firebaseConfig);
@@ -111,57 +167,72 @@ body {
   const $ = id => document.getElementById(id);
   const fmt = n => Number(n || 0).toLocaleString('en-US');
 
-  // أيقونات SVG الفاخرة
+  // 🎨 أيقونات لكل قسم — "شي بيشبهو المشروبات والأكل وغيرو"
   const icons = {
     "المشروبات الساخنة": `<svg viewBox="0 0 24 24"><path d="M17 8h1a4 4 0 1 1 0 8h-1"/><path d="M3 8h14v9a4 4 0 0 1-4 4H7a4 4 0 0 1-4-4Z"/><path d="M6 2v2"/><path d="M10 2v2"/><path d="M14 2v2"/></svg>`,
-    "الأراكيل": `<svg viewBox="0 0 24 24"><path d="M12 22v-6"/><path d="M8 22h8"/><path d="M12 16a4 4 0 0 0 4-4V6a4 4 0 0 0-8 0v6a4 4 0 0 0 4 4Z"/><path d="M10 6h4"/></svg>`,
+    "الأراكيل": `<svg viewBox="0 0 24 24"><path d="M12 22v-6"/><path d="M8 22h8"/><path d="M12 16a4 4 0 0 0 4-4V6a4 4 0 0 0-8 0v6a4 4 0 0 0 4 4Z"/><path d="M10 6h4"/><circle cx="12" cy="4" r="0.5" fill="currentColor"/></svg>`,
     "مشاوي": `<svg viewBox="0 0 24 24"><path d="M4 14h16"/><path d="M6 14v4a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2v-4"/><path d="M8 10V2"/><path d="M12 10V2"/><path d="M16 10V2"/></svg>`,
     "الشاورما": `<svg viewBox="0 0 24 24"><path d="M4 8h16v10a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2Z"/><path d="M6 8V4h12v4"/><path d="M10 12v4"/><path d="M14 12v4"/></svg>`,
-    "السندويش والبرغر": `<svg viewBox="0 0 24 24"><path d="M4 10h16"/><path d="M4 14h16"/><path d="M6 14v2a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2v-2"/><path d="M6 10V6a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v4"/></svg>`,
-    "الوجبات": `<svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M12 2a10 10 0 0 0 0 20"/><path d="M2 12h20"/></svg>`,
-    "بيتزا وفطائر": `<svg viewBox="0 0 24 24"><path d="M12 2L2 22h20L12 2z"/><circle cx="12" cy="14" r="1"/><circle cx="8" cy="18" r="1"/><circle cx="16" cy="18" r="1"/></svg>`,
-    "مقبلات باردة": `<svg viewBox="0 0 24 24"><path d="M12 22a10 10 0 0 0 10-10H2a10 10 0 0 0 10 10z"/><path d="M12 2v10"/><path d="M8 6l4 4"/><path d="M16 6l-4 4"/></svg>`,
-    "وجبات ساخنة": `<svg viewBox="0 0 24 24"><path d="M3 12h18"/><path d="M5 12v4a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2v-4"/><path d="M8 6l2 4"/><path d="M16 6l-2 4"/></svg>`,
-    "مقبلات ساخنة": `<svg viewBox="0 0 24 24"><path d="M3 12h18"/><path d="M5 12v4a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2v-4"/><path d="M8 6l2 4"/><path d="M16 6l-2 4"/></svg>`,
-    "فتات": `<svg viewBox="0 0 24 24"><path d="M4 10h16v8a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2Z"/><path d="M8 10V6h8v4"/></svg>`,
-    "فريتشينو وعصائر": `<svg viewBox="0 0 24 24"><path d="M8 2h8l1 10H7Z"/><path d="M9 12v8a2 2 0 0 0 2 2h2a2 2 0 0 0 2-2v-8"/><path d="M12 2v4"/></svg>`,
-    "كوكتيلات ومشروبات باردة": `<svg viewBox="0 0 24 24"><path d="M6 4h12l-1 16H7Z"/><path d="M6 8h12"/><path d="M12 4V2"/><path d="M14 2h-4"/></svg>`
+    "السندويش والبرغر": `<svg viewBox="0 0 24 24"><path d="M4 10h16"/><path d="M4 14h16"/><path d="M6 14v2a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2v-2"/><path d="M6 10V6a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v4"/><path d="M9 7h.01"/><path d="M15 7h.01"/></svg>`,
+    "الوجبات": `<svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M12 2a10 10 0 0 0 0 20"/><path d="M2 12h20"/><circle cx="12" cy="12" r="3"/></svg>`,
+    "بيتزا وفطائر": `<svg viewBox="0 0 24 24"><path d="M12 2L2 22h20L12 2z"/><circle cx="12" cy="14" r="1"/><circle cx="8" cy="18" r="1"/><circle cx="16" cy="18" r="1"/><circle cx="12" cy="18" r="0.6"/></svg>`,
+    "مقبلات باردة": `<svg viewBox="0 0 24 24"><path d="M12 22a10 10 0 0 0 10-10H2a10 10 0 0 0 10 10z"/><path d="M12 2v10"/><path d="M8 6l4 4"/><path d="M16 6l-4 4"/><path d="M4 12h16"/></svg>`,
+    "وجبات ساخنة": `<svg viewBox="0 0 24 24"><path d="M3 12h18"/><path d="M5 12v4a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2v-4"/><path d="M8 6l2 4"/><path d="M16 6l-2 4"/><path d="M12 6v2"/></svg>`,
+    "مقبلات ساخنة": `<svg viewBox="0 0 24 24"><path d="M3 12h18"/><path d="M5 12v4a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2v-4"/><path d="M8 6l2 4"/><path d="M16 6l-2 4"/><circle cx="12" cy="8" r="1"/></svg>`,
+    "فتات": `<svg viewBox="0 0 24 24"><path d="M4 10h16v8a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2Z"/><path d="M8 10V6h8v4"/><path d="M10 14h4"/></svg>`,
+    "فريتشينو وعصائر": `<svg viewBox="0 0 24 24"><path d="M8 2h8l1 10H7Z"/><path d="M9 12v8a2 2 0 0 0 2 2h2a2 2 0 0 0 2-2v-8"/><path d="M12 2v4"/><path d="M10 18h4"/></svg>`,
+    "كوكتيلات ومشروبات باردة": `<svg viewBox="0 0 24 24"><path d="M6 4h12l-1 16H7Z"/><path d="M6 8h12"/><path d="M12 4V2"/><path d="M14 2h-4"/><circle cx="10" cy="14" r="1"/><circle cx="14" cy="16" r="1"/></svg>`,
+    "حلويات": `<svg viewBox="0 0 24 24"><path d="M20 10c0-3-3-5-8-5s-8 2-8 5c0 2 1 3 2 4v4a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2v-4c1-1 2-2 2-4Z"/><path d="M8 14h8"/><circle cx="12" cy="8" r="1"/></svg>`,
+    "قهوة": `<svg viewBox="0 0 24 24"><path d="M17 8h1a4 4 0 1 1 0 8h-1"/><path d="M3 8h14v9a4 4 0 0 1-4 4H7a4 4 0 0 1-4-4Z"/><path d="M6 2v2"/><path d="M10 2v2"/></svg>`
   };
-  const defaultIcon = `<svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/></svg>`;
+  const defaultIcon = `<svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M8 12h8"/><path d="M12 8v8"/></svg>`;
 
   let allItems = [];
-  let settings = { name: "بيت الباشا", subtitle: "حيث تلتقي نكهة الضيافة بأجواء الراحة" };
+  let settings = { theme: "royal", menuLayout: "grid", logoType: "svg", logoUrl: "", categoryOrder: [], showHero: true, name: "بيت الباشا", subtitle: "حيث تلتقي نكهة الضيافة بأجواء الراحة" };
 
-  // 1. جلب الإعدادات
+  // 1. Settings
   onSnapshot(doc(db, "settings", "info"), snap => {
     if (snap.exists()) {
-      settings = snap.data();
+      settings = { ...settings, ...snap.data() };
+      if (typeof settings.showHero === "undefined") settings.showHero = true;
+
+      document.documentElement.setAttribute("data-theme", settings.theme || "royal");
       if (settings.name) $("restaurantName").textContent = settings.name;
       if (settings.subtitle) $("restaurantSubtitle").textContent = settings.subtitle;
+
+      // 👁️ إظهار/إخفاء الواجهة العلوية
+      const hero = $("heroSection");
+      if (settings.showHero === false) hero.classList.add("hidden");
+      else hero.classList.remove("hidden");
+
+      // Logo
+      const logoBox = $("logoContainer");
+      if (settings.logoType === "image" && settings.logoUrl) {
+        logoBox.innerHTML = `<img src="${settings.logoUrl}" alt="Logo">`;
+      } else {
+        logoBox.innerHTML = `الباشا`;
+      }
     }
   });
 
-  // 2. جلب الأصناف وبناء المنيو
+  // 2. Menu
   onSnapshot(doc(db, "menu", "all"), snap => {
-    if (snap.exists()) {
-      allItems = snap.data().items || [];
-    } else {
-      allItems = [];
-    }
+    if (snap.exists()) allItems = snap.data().items || [];
+    else allItems = [];
     renderMenu();
   });
 
   function renderMenu() {
-    const nav = $("nav");
-    const menu = $("menu");
-    
+    const nav = $("nav"), menu = $("menu");
     if (allItems.length === 0) {
-      menu.innerHTML = `<div class="empty-state">لا توجد أصناف حالياً. يرجى إضافتها من لوحة التحكم.</div>`;
+      menu.innerHTML = `<div class="empty-state">
+        <svg viewBox="0 0 24 24"><path d="M3 3h18v18H3z"/><path d="M9 9h6v6H9z"/></svg>
+        <p>لا توجد أصناف حالياً.</p>
+      </div>`;
       nav.innerHTML = "";
       return;
     }
 
-    // تجميع الأصناف حسب القسم
     const grouped = {};
     allItems.forEach(item => {
       const cat = item.category || "أخرى";
@@ -169,57 +240,73 @@ body {
       grouped[cat].push(item);
     });
 
-    nav.innerHTML = "";
-    menu.innerHTML = "";
+    // ترتيب الأقسام
+    const order = Array.isArray(settings.categoryOrder) ? settings.categoryOrder : [];
+    const inOrder = order.filter(c => grouped[c]);
+    const notInOrder = Object.keys(grouped).filter(c => !order.includes(c)).sort((a,b) => a.localeCompare(b, 'ar'));
+    const finalCats = [...inOrder, ...notInOrder];
 
-    // بناء الأقسام
-    Object.keys(grouped).forEach((cat, index) => {
+    nav.innerHTML = ""; menu.innerHTML = "";
+
+    finalCats.forEach((cat, index) => {
       const id = `cat-${index}`;
       const icon = icons[cat] || defaultIcon;
 
-      // بناء أزرار التنقل
-      nav.innerHTML += `
-        <a href="#${id}" class="nav-item">
-          ${icon}
-          <span>${cat}</span>
-        </a>
-      `;
+      // Nav item
+      nav.innerHTML += `<a href="#${id}" class="nav-item">${icon}<span>${cat}</span></a>`;
 
-      // بناء بطاقات الأصناف
-      let itemsHtml = grouped[cat].map(item => `
-        <div class="item-card">
-          <div class="item-img-wrap">
-            <img src="${item.imageUrl || 'https://placehold.co/400x300/141414/D4AF37?text=Food'}" class="item-img" alt="${item.name}" loading="lazy" onerror="this.src='https://placehold.co/400x300/141414/D4AF37?text=Food'">
-          </div>
-          <div class="item-content">
-            <div class="item-name">${item.name}</div>
-            <div class="item-price">${fmt(item.price)} <span>ل.س</span></div>
-          </div>
-        </div>
-      `).join('');
+      const layout = settings.menuLayout || "grid";
+      let itemsHtml = "";
 
-      menu.innerHTML += `
-        <section class="category-section" id="${id}">
+      if (layout === "list") {
+        itemsHtml = `<div class="menu-list">${grouped[cat].map(item => `
+          <div class="card-list">
+            <img src="${item.imageUrl || 'https://placehold.co/200x200/141414/D4AF37?text=Food'}" class="card-list-img" onerror="this.src='https://placehold.co/200x200/141414/D4AF37?text=Food'">
+            <div style="flex:1"><div class="item-name" style="margin-bottom:4px">${item.name}</div><div class="item-price">${fmt(item.price)} ل.س</div></div>
+          </div>
+        `).join('')}</div>`;
+      } else {
+        // grid أو sections — نعرض بنفس الشبكة
+        itemsHtml = `<div class="menu-grid">${grouped[cat].map(item => `
+          <div class="item-card">
+            <div class="item-img-wrap"><img src="${item.imageUrl || 'https://placehold.co/400x300/141414/D4AF37?text=Food'}" class="item-img" alt="${item.name}" loading="lazy" onerror="this.src='https://placehold.co/400x300/141414/D4AF37?text=Food'"></div>
+            <div class="item-content">
+              <div class="item-name">${item.name}</div>
+              <div class="item-price">${fmt(item.price)} <span>ل.س</span></div>
+            </div>
+          </div>
+        `).join('')}</div>`;
+      }
+
+      // 🎨 عنوان القسم مع أيقونة كبيرة فوقه
+      menu.innerHTML += `<section class="category-section" id="${id}">
+        <div class="category-header">
+          <div class="category-icon-big">${icon}</div>
           <h2 class="category-title">${cat}</h2>
-          <div class="menu-grid">${itemsHtml}</div>
-        </section>
-      `;
+          <div class="category-line"><span class="dot"></span></div>
+        </div>
+        ${itemsHtml}
+      </section>`;
     });
 
-    // تفعيل القسم النشط عند التمرير
+    // Active Nav Scroll
     const sections = document.querySelectorAll('.category-section');
     const navItems = document.querySelectorAll('.nav-item');
-    window.addEventListener('scroll', () => {
+    const offsetExtra = settings.showHero === false ? 20 : 120;
+
+    const onScroll = () => {
       let current = '';
       sections.forEach(section => {
-        const sectionTop = section.offsetTop;
-        if (scrollY >= sectionTop - 120) current = section.getAttribute('id');
+        if (scrollY >= section.offsetTop - offsetExtra) current = section.getAttribute('id');
       });
       navItems.forEach(item => {
         item.classList.remove('active');
         if (item.getAttribute('href') === `#${current}`) item.classList.add('active');
       });
-    });
+    };
+    window.removeEventListener('scroll', onScroll);
+    window.addEventListener('scroll', onScroll);
+    onScroll();
   }
 </script>
 </body>
