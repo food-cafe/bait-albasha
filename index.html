@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0">
+<title>بيت الباشا | قائمة الطعام</title>
+<link href="https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&family=Tajawal:wght@300;400;700;900&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg-main: #0a0a0a; --card-bg: #141414; --gold: #D4AF37; --gold-light: #F3E5AB;
+  --gold-dark: #997A00; --text-main: #FDFBF7; --text-muted: #888; --border: rgba(212, 175, 55, 0.15);
+}
+* { margin: 0; padding: 0; box-sizing: border-box; }
+html { scroll-behavior: smooth; }
+body {
+  font-family: 'Tajawal', sans-serif; background-color: var(--bg-main); color: var(--text-main);
+  line-height: 1.6; background-image: radial-gradient(circle at top, #1a1a1a 0%, #0a0a0a 70%);
+  background-attachment: fixed; padding-bottom: 50px; -webkit-font-smoothing: antialiased;
+}
+.hero { padding: 50px 20px 40px; text-align: center; border-bottom: 1px solid var(--border); position: relative; }
+.hero::after { content: ''; position: absolute; bottom: 0; left: 20%; right: 20%; height: 1px; background: linear-gradient(90deg, transparent, var(--gold), transparent); }
+.hero-logo {
+  width: 85px; height: 85px; border-radius: 50%; border: 1px solid var(--gold);
+  display: flex; align-items: center; justify-content: center; font-family: 'Amiri', serif;
+  font-size: 26px; color: var(--gold); margin: 0 auto 15px; box-shadow: 0 0 40px rgba(212, 175, 55, 0.15); background: #111;
+}
+.hero h1 { font-family: 'Amiri', serif; font-size: 2.5em; color: var(--gold); margin-bottom: 5px; }
+.hero h2 { font-size: 0.85em; font-weight: 400; letter-spacing: 8px; color: var(--text-muted); margin-bottom: 15px; text-transform: uppercase; }
+.hero p { font-size: 1.05em; color: var(--text-main); max-width: 400px; margin: 0 auto; opacity: 0.7; font-weight: 300; }
+
+.nav-wrapper { position: sticky; top: 0; z-index: 100; background: rgba(10, 10, 10, 0.85); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px); border-bottom: 1px solid var(--border); padding: 15px 0; }
+.nav-categories { display: flex; gap: 12px; overflow-x: auto; scrollbar-width: none; padding: 0 20px; max-width: 1200px; margin: 0 auto; }
+.nav-categories::-webkit-scrollbar { display: none; }
+.nav-item {
+  display: flex; flex-direction: column; align-items: center; justify-content: center; min-width: 100px;
+  background: linear-gradient(145deg, #161616, #0f0f0f); border: 1px solid var(--border);
+  padding: 12px 10px; border-radius: 12px; text-decoration: none; color: var(--text-muted);
+  transition: all 0.4s ease; box-shadow: 0 4px 15px rgba(0,0,0,0.4);
+}
+.nav-item svg { width: 28px; height: 28px; stroke: var(--text-muted); fill: none; stroke-width: 1.2; margin-bottom: 8px; transition: all 0.4s ease; }
+.nav-item span { font-size: 0.85em; font-weight: 700; white-space: nowrap; }
+.nav-item:hover, .nav-item.active { background: linear-gradient(145deg, #222, #111); color: var(--gold); border-color: var(--gold); box-shadow: 0 8px 25px rgba(212, 175, 55, 0.15); transform: translateY(-3px); }
+.nav-item:hover svg, .nav-item.active svg { stroke: var(--gold); transform: scale(1.1); filter: drop-shadow(0 0 5px rgba(212,175,55,0.5)); }
+
+.menu-container { max-width: 1100px; margin: 0 auto; padding: 40px 20px; }
+.category-section { margin-bottom: 60px; scroll-margin-top: 120px; }
+.category-title { font-family: 'Amiri', serif; font-size: 1.8em; color: var(--gold); margin-bottom: 25px; display: flex; align-items: center; gap: 15px; }
+.category-title::after { content: ''; flex: 1; height: 1px; background: linear-gradient(90deg, var(--gold), transparent); }
+
+.menu-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); gap: 15px; }
+@media (min-width: 768px) { .menu-grid { grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); gap: 25px; } }
+
+.item-card { background: var(--card-bg); border: 1px solid var(--border); border-radius: 14px; overflow: hidden; display: flex; flex-direction: column; transition: 0.4s ease; box-shadow: 0 10px 30px rgba(0,0,0,0.5); }
+.item-card:active { transform: scale(0.98); }
+@media (hover: hover) { .item-card:hover { transform: translateY(-6px); border-color: var(--gold); box-shadow: 0 15px 35px rgba(212,175,55,0.1); } .item-card:hover .item-img { transform: scale(1.08); } }
+.item-img-wrap { width: 100%; aspect-ratio: 4/3; overflow: hidden; position: relative; background: #111; }
+.item-img { width: 100%; height: 100%; object-fit: cover; transition: 0.6s ease; }
+.item-content { padding: 15px; text-align: center; display: flex; flex-direction: column; justify-content: space-between; flex-grow: 1; }
+.item-name { font-size: 1.05em; font-weight: 700; color: var(--text-main); margin-bottom: 12px; line-height: 1.3; }
+.item-price { font-family: 'Tajawal', sans-serif; font-size: 1.1em; font-weight: 900; color: var(--gold); margin-top: auto; background: rgba(212, 175, 55, 0.08); padding: 4px 15px; border-radius: 20px; display: inline-block; align-self: center; border: 1px solid rgba(212, 175, 55, 0.2); }
+
+/* Skeleton */
+.skeleton-card { background: var(--card-bg); border-radius: 14px; overflow: hidden; border: 1px solid var(--border); }
+.skeleton-img { aspect-ratio: 4/3; background: linear-gradient(90deg, #141414 25%, #222 50%, #141414 75%); background-size: 200% 100%; animation: shimmer 1.5s infinite; }
+.skeleton-text { height: 16px; margin: 12px 15px; border-radius: 4px; background: linear-gradient(90deg, #141414 25%, #222 50%, #141414 75%); background-size: 200% 100%; animation: shimmer 1.5s infinite; width: 70%; }
+@keyframes shimmer { 0% { background-position: 200% 0; } 100% { background-position: -200% 0; } }
+
+.empty-state { text-align: center; padding: 60px 20px; color: var(--text-muted); }
+</style>
+</head>
+<body>
+
+<header class="hero">
+  <div class="hero-logo">الباشا</div>
+  <h1 id="restaurantName">بيت الباشا</h1>
+  <h2>BEIT AL BASHA</h2>
+  <p id="restaurantSubtitle">حيث تلتقي نكهة الضيافة بأجواء الراحة</p>
+</header>
+
+<div class="nav-wrapper">
+  <nav class="nav-categories" id="nav"></nav>
+</div>
+
+<main class="menu-container" id="menu">
+  <!-- Skeleton while loading -->
+  <div class="menu-grid" id="skeletonGrid">
+    <div class="skeleton-card"><div class="skeleton-img"></div><div class="skeleton-text"></div></div>
+    <div class="skeleton-card"><div class="skeleton-img"></div><div class="skeleton-text"></div></div>
+    <div class="skeleton-card"><div class="skeleton-img"></div><div class="skeleton-text"></div></div>
+    <div class="skeleton-card"><div class="skeleton-img"></div><div class="skeleton-text"></div></div>
+  </div>
+</main>
+
+<script type="module">
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+  import { getFirestore, doc, onSnapshot } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+
+  // ⚠️ ضع كود Firebase الخاص بمشروع بيت الباشا هنا
+  const firebaseConfig = {
+    apiKey: "YOUR_API_KEY",
+    authDomain: "YOUR_PROJECT.firebaseapp.com",
+    projectId: "YOUR_PROJECT_ID",
+    storageBucket: "YOUR_PROJECT.appspot.com",
+    messagingSenderId: "YOUR_SENDER_ID",
+    appId: "YOUR_APP_ID"
+  };
+
+  const app = initializeApp(firebaseConfig);
+  const db = getFirestore(app);
+
+  const $ = id => document.getElementById(id);
+  const fmt = n => Number(n || 0).toLocaleString('en-US');
+
+  // أيقونات SVG الفاخرة
+  const icons = {
+    "المشروبات الساخنة": `<svg viewBox="0 0 24 24"><path d="M17 8h1a4 4 0 1 1 0 8h-1"/><path d="M3 8h14v9a4 4 0 0 1-4 4H7a4 4 0 0 1-4-4Z"/><path d="M6 2v2"/><path d="M10 2v2"/><path d="M14 2v2"/></svg>`,
+    "الأراكيل": `<svg viewBox="0 0 24 24"><path d="M12 22v-6"/><path d="M8 22h8"/><path d="M12 16a4 4 0 0 0 4-4V6a4 4 0 0 0-8 0v6a4 4 0 0 0 4 4Z"/><path d="M10 6h4"/></svg>`,
+    "مشاوي": `<svg viewBox="0 0 24 24"><path d="M4 14h16"/><path d="M6 14v4a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2v-4"/><path d="M8 10V2"/><path d="M12 10V2"/><path d="M16 10V2"/></svg>`,
+    "الشاورما": `<svg viewBox="0 0 24 24"><path d="M4 8h16v10a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2Z"/><path d="M6 8V4h12v4"/><path d="M10 12v4"/><path d="M14 12v4"/></svg>`,
+    "السندويش والبرغر": `<svg viewBox="0 0 24 24"><path d="M4 10h16"/><path d="M4 14h16"/><path d="M6 14v2a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2v-2"/><path d="M6 10V6a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v4"/></svg>`,
+    "الوجبات": `<svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M12 2a10 10 0 0 0 0 20"/><path d="M2 12h20"/></svg>`,
+    "بيتزا وفطائر": `<svg viewBox="0 0 24 24"><path d="M12 2L2 22h20L12 2z"/><circle cx="12" cy="14" r="1"/><circle cx="8" cy="18" r="1"/><circle cx="16" cy="18" r="1"/></svg>`,
+    "مقبلات باردة": `<svg viewBox="0 0 24 24"><path d="M12 22a10 10 0 0 0 10-10H2a10 10 0 0 0 10 10z"/><path d="M12 2v10"/><path d="M8 6l4 4"/><path d="M16 6l-4 4"/></svg>`,
+    "وجبات ساخنة": `<svg viewBox="0 0 24 24"><path d="M3 12h18"/><path d="M5 12v4a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2v-4"/><path d="M8 6l2 4"/><path d="M16 6l-2 4"/></svg>`,
+    "مقبلات ساخنة": `<svg viewBox="0 0 24 24"><path d="M3 12h18"/><path d="M5 12v4a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2v-4"/><path d="M8 6l2 4"/><path d="M16 6l-2 4"/></svg>`,
+    "فتات": `<svg viewBox="0 0 24 24"><path d="M4 10h16v8a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2Z"/><path d="M8 10V6h8v4"/></svg>`,
+    "فريتشينو وعصائر": `<svg viewBox="0 0 24 24"><path d="M8 2h8l1 10H7Z"/><path d="M9 12v8a2 2 0 0 0 2 2h2a2 2 0 0 0 2-2v-8"/><path d="M12 2v4"/></svg>`,
+    "كوكتيلات ومشروبات باردة": `<svg viewBox="0 0 24 24"><path d="M6 4h12l-1 16H7Z"/><path d="M6 8h12"/><path d="M12 4V2"/><path d="M14 2h-4"/></svg>`
+  };
+  const defaultIcon = `<svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/></svg>`;
+
+  let allItems = [];
+  let settings = { name: "بيت الباشا", subtitle: "حيث تلتقي نكهة الضيافة بأجواء الراحة" };
+
+  // 1. جلب الإعدادات
+  onSnapshot(doc(db, "settings", "info"), snap => {
+    if (snap.exists()) {
+      settings = snap.data();
+      if (settings.name) $("restaurantName").textContent = settings.name;
+      if (settings.subtitle) $("restaurantSubtitle").textContent = settings.subtitle;
+    }
+  });
+
+  // 2. جلب الأصناف وبناء المنيو
+  onSnapshot(doc(db, "menu", "all"), snap => {
+    if (snap.exists()) {
+      allItems = snap.data().items || [];
+    } else {
+      allItems = [];
+    }
+    renderMenu();
+  });
+
+  function renderMenu() {
+    const nav = $("nav");
+    const menu = $("menu");
+    
+    if (allItems.length === 0) {
+      menu.innerHTML = `<div class="empty-state">لا توجد أصناف حالياً. يرجى إضافتها من لوحة التحكم.</div>`;
+      nav.innerHTML = "";
+      return;
+    }
+
+    // تجميع الأصناف حسب القسم
+    const grouped = {};
+    allItems.forEach(item => {
+      const cat = item.category || "أخرى";
+      if (!grouped[cat]) grouped[cat] = [];
+      grouped[cat].push(item);
+    });
+
+    nav.innerHTML = "";
+    menu.innerHTML = "";
+
+    // بناء الأقسام
+    Object.keys(grouped).forEach((cat, index) => {
+      const id = `cat-${index}`;
+      const icon = icons[cat] || defaultIcon;
+
+      // بناء أزرار التنقل
+      nav.innerHTML += `
+        <a href="#${id}" class="nav-item">
+          ${icon}
+          <span>${cat}</span>
+        </a>
+      `;
+
+      // بناء بطاقات الأصناف
+      let itemsHtml = grouped[cat].map(item => `
+        <div class="item-card">
+          <div class="item-img-wrap">
+            <img src="${item.imageUrl || 'https://placehold.co/400x300/141414/D4AF37?text=Food'}" class="item-img" alt="${item.name}" loading="lazy" onerror="this.src='https://placehold.co/400x300/141414/D4AF37?text=Food'">
+          </div>
+          <div class="item-content">
+            <div class="item-name">${item.name}</div>
+            <div class="item-price">${fmt(item.price)} <span>ل.س</span></div>
+          </div>
+        </div>
+      `).join('');
+
+      menu.innerHTML += `
+        <section class="category-section" id="${id}">
+          <h2 class="category-title">${cat}</h2>
+          <div class="menu-grid">${itemsHtml}</div>
+        </section>
+      `;
+    });
+
+    // تفعيل القسم النشط عند التمرير
+    const sections = document.querySelectorAll('.category-section');
+    const navItems = document.querySelectorAll('.nav-item');
+    window.addEventListener('scroll', () => {
+      let current = '';
+      sections.forEach(section => {
+        const sectionTop = section.offsetTop;
+        if (scrollY >= sectionTop - 120) current = section.getAttribute('id');
+      });
+      navItems.forEach(item => {
+        item.classList.remove('active');
+        if (item.getAttribute('href') === `#${current}`) item.classList.add('active');
+      });
+    });
+  }
+</script>
+</body>
+</html>
